@@ -1,0 +1,392 @@
+/* ============================================================
+   Custom Math & Chemistry Editor  —  MathLive edition
+   ============================================================ */
+
+/* ── Google Font ─────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+.cme-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #0f766e;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow:
+    0 4px 24px rgba(15, 118, 110, 0.13),
+    0 1px 4px rgba(0, 0, 0, 0.07);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ── Tab Bar ─────────────────────────────────────────────── */
+.cme-tabs {
+  display: flex;
+  background: linear-gradient(90deg, #0f766e 0%, #0e9f8e 100%);
+  padding: 0 12px;
+  gap: 2px;
+}
+
+.cme-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 20px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.18s, border-color 0.18s;
+}
+
+.cme-tab:hover {
+  color: #ffffff;
+}
+
+.cme-tab.active {
+  color: #ffffff;
+  border-bottom-color: #5eead4;
+}
+
+.cme-tab svg {
+  width: 15px;
+  height: 15px;
+  opacity: 0.85;
+}
+
+/* ── Symbol Toolbar ──────────────────────────────────────── */
+.cme-toolbar {
+  background: #f0faf9;
+  border-bottom: 1px solid #b2e4dc;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.cme-toolbar-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  border-bottom: 1px solid #c7e6e2;
+  padding-bottom: 6px;
+}
+
+.cme-group-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f766e;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.cme-group-tab:hover {
+  background: #e0f7f4;
+}
+
+.cme-group-tab.active {
+  background: #0f766e;
+  color: #ffffff;
+}
+
+.cme-toolbar-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  min-height: 32px;
+}
+
+.cme-btn {
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  border: 1px solid #c7e6e2;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #101828;
+  font-size: 14px;
+  font-family: "Latin Modern Math", "STIX Two Math", "Times New Roman", serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    transform 0.1s,
+    box-shadow 0.12s;
+  white-space: nowrap;
+  line-height: 1;
+  user-select: none;
+}
+
+.cme-btn:hover {
+  background: #e0f7f4;
+  border-color: #0f766e;
+  box-shadow: 0 2px 6px rgba(15, 118, 110, 0.18);
+  transform: translateY(-1px);
+}
+
+.cme-btn:active {
+  transform: translateY(0);
+  background: #ccf1ec;
+}
+
+.cme-btn.template {
+  font-family: Inter, ui-sans-serif, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f766e;
+  background: #e6faf7;
+  border-color: #99d9d3;
+  padding: 0 9px;
+}
+
+.cme-btn.template:hover {
+  background: #b9f0ea;
+}
+
+.cme-btn.chem-element {
+  font-weight: 700;
+  font-size: 12px;
+  font-family: Inter, sans-serif;
+  color: #1e3a5f;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.cme-btn.chem-element:hover {
+  background: #dbeafe;
+  border-color: #3b82f6;
+}
+
+.cme-btn.chem-arrow,
+.cme-btn.chem-state {
+  font-size: 13px;
+  background: #fef9f0;
+  border-color: #fcd99a;
+  color: #92400e;
+}
+
+.cme-btn.chem-arrow:hover,
+.cme-btn.chem-state:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
+}
+
+.cme-sep {
+  width: 1px;
+  height: 20px;
+  background: #c7e6e2;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── MathLive Visual Editor Container ────────────────────── */
+.cme-mathfield-container {
+  background: #ffffff;
+  border-bottom: 1px solid #d1f0ec;
+  min-height: 90px;
+  display: flex;
+  align-items: stretch;
+}
+
+/*
+  math-field is a Web Component. We style it via CSS custom properties
+  (which pierce the shadow DOM) plus block-level layout.
+*/
+math-field.cme-mathfield {
+  display: block;
+  width: 100%;
+  min-height: 90px;
+  padding: 18px 22px;
+  font-size: 22px;
+  outline: none;
+  border: none;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: text;
+
+  /* ── MathLive theme tokens ─────────────────────────────── */
+  --hue: 174;                                        /* teal accent hue */
+  --primary-color: #0f766e;
+  --caret-color: #0f766e;
+  --selection-background-color: rgba(15, 118, 110, 0.18);
+  --selection-color: #064e3b;
+  --contains-highlight-background-color: rgba(15, 118, 110, 0.07);
+  --smart-fence-color: #0f766e;
+  --text-font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+math-field.cme-mathfield:focus-within {
+  background: #f2fbfa;
+}
+
+/* Placeholder text when empty */
+math-field.cme-mathfield::part(container) {
+  min-height: 54px;
+  align-items: center;
+}
+
+/* Hide the virtual keyboard toggle button */
+math-field.cme-mathfield::part(virtual-keyboard-toggle) {
+  display: none;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.cme-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 14px;
+  background: #f0faf9;
+  border-top: 1px solid #d9f0ed;
+  font-size: 11px;
+  color: #64748b;
+  gap: 8px;
+}
+
+.cme-mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.cme-mode-badge.math {
+  background: #d9f4ef;
+  color: #0f766e;
+}
+
+.cme-mode-badge.chem {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.cme-hint {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* ── Main Input Box ──────────────────────────────────────── */
+.Input-question-box {
+  padding: 12px;
+  background: #f8fafc;
+}
+
+math-field.cme-main-mathfield {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: Inter, sans-serif;
+  box-sizing: border-box;
+  outline: none;
+  background: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: text;
+}
+
+math-field.cme-main-mathfield:focus-within {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
+}
+
+/* Hide the virtual keyboard and menu toggle buttons */
+math-field.cme-main-mathfield::part(virtual-keyboard-toggle),
+math-field.cme-main-mathfield::part(menu-toggle) {
+  display: none;
+}
+
+/* ── Math Editor Popup ───────────────────────────────────── */
+.cme-editor-popup {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 450px;
+  background: #ffffff;
+  border: 2px solid #0f766e;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cme-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: #0f766e;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.cme-popup-close {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.cme-popup-close:hover {
+  opacity: 1;
+}
+
+.cme-popup-footer {
+  padding: 12px;
+  background: #f0faf9;
+  border-top: 1px solid #c7e6e2;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cme-insert-btn {
+  background: #0f766e;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cme-insert-btn:hover {
+  background: #0d655e;
+}
