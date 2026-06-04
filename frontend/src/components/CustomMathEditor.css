@@ -8,14 +8,11 @@
 .cme-wrapper {
   display: flex;
   flex-direction: column;
-  border: 2px solid #0f766e;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #ffffff;
-  box-shadow:
-    0 4px 24px rgba(15, 118, 110, 0.13),
-    0 1px 4px rgba(0, 0, 0, 0.07);
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  border: none;
+  border-radius: 4px;
+  overflow: visible;
+  background: transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* ── Tab Bar ─────────────────────────────────────────────── */
@@ -196,11 +193,15 @@
 
 /* ── MathLive Visual Editor Container ────────────────────── */
 .cme-mathfield-container {
-  background: #ffffff;
+   background: #ffffff;
   border-bottom: 1px solid #d1f0ec;
   min-height: 90px;
+
   display: flex;
-  align-items: stretch;
+   align-items: flex-start;
+
+  max-height: 300px; /* adjust as needed */
+  overflow-y: auto;  /* shows scrollbar when needed */
 }
 
 /*
@@ -221,13 +222,15 @@ math-field.cme-mathfield {
 
   /* ── MathLive theme tokens ─────────────────────────────── */
   --hue: 174;                                        /* teal accent hue */
-  --primary-color: #0f766e;
+  --primary-color: #111827;
   --caret-color: #0f766e;
   --selection-background-color: rgba(15, 118, 110, 0.18);
   --selection-color: #064e3b;
-  --contains-highlight-background-color: rgba(15, 118, 110, 0.07);
+  --contains-highlight-background-color: transparent;
   --smart-fence-color: #0f766e;
   --text-font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  --highlight-inactive-color: transparent;
+  --text-highlight-background-color: transparent;
 }
 
 math-field.cme-mathfield:focus-within {
@@ -240,8 +243,9 @@ math-field.cme-mathfield::part(container) {
   align-items: center;
 }
 
-/* Hide the virtual keyboard toggle button */
-math-field.cme-mathfield::part(virtual-keyboard-toggle) {
+/* Hide the virtual keyboard and menu toggle buttons */
+math-field.cme-mathfield::part(virtual-keyboard-toggle),
+math-field.cme-mathfield::part(menu-toggle) {
   display: none;
 }
 
@@ -288,8 +292,9 @@ math-field.cme-mathfield::part(virtual-keyboard-toggle) {
 
 /* ── Main Input Box ──────────────────────────────────────── */
 .Input-question-box {
-  padding: 12px;
-  background: #f8fafc;
+  padding: 0;
+  background: transparent;
+  width: 100%;
 }
 
 math-field.cme-main-mathfield {
@@ -389,4 +394,19 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 
 .cme-insert-btn:hover {
   background: #0d655e;
+}
+
+@media (max-width: 520px) {
+  .cme-editor-popup {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    max-width: none;
+  }
+
+  .cme-tab {
+    padding: 10px 14px;
+    font-size: 11px;
+  }
 }

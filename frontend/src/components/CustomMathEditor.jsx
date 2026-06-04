@@ -2,17 +2,18 @@
  * CustomMathEditor — A WIRIS/MathType-inspired Math & Chemistry editor
  * powered by MathLive for interactive WYSIWYG visual editing.
  *
- * The cursor lives directly inside the rendered math preview.
- * No raw LaTeX text input is shown to the user.
+ * The main input area is a CustomTextEditor (contenteditable + inline math-fields).
+ * Math/Chem snippets from the popup are inserted as editable <math-field> nodes.
  *
  * Props:
- *   value    {string}   — current LaTeX string
- *   onChange {function} — called with new LaTeX string on every change
+ *   value    {string}   — serialized string (plain text + §MATH§latex§END§ segments)
+ *   onChange {function} — called with new serialized string on every change
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import "mathlive";
 import "./CustomMathEditor.css";
+import CustomTextEditor from "./CustomTextEditor";
 
 function unwrapChemValue(value = "") {
   const match = String(value).match(/^\\ce\{([\s\S]*)\}$/);
@@ -24,15 +25,11 @@ function serializeChemValue(value = "") {
     .replace(/\\text\{([^}]*)\}/g, "$1")
     .replace(/\$/g, "")
     .trim();
-
   return normalized ? `\\ce{${normalized}}` : "";
 }
 
 /* ─────────────────────────────────────────────────────────────
    Symbol / Template definitions
-   MathLive insert tokens:
-     #0  = wraps/replaces current selection (cursor placeholder if nothing selected)
-     #?  = an empty interactive placeholder the user can tab into
 ───────────────────────────────────────────────────────────── */
 const MATH_GROUPS = [
   {
@@ -140,25 +137,110 @@ const MATH_GROUPS = [
       { label: "↓", insert: "\\downarrow" },
     ],
   },
+  {
+    label: "Integrals",
+    isTemplate: true,
+    items: [
+      { label: "∫",       insert: "\\int" },
+      { label: "∬",       insert: "\\iint" },
+      { label: "∭",       insert: "\\iiint" },
+      { label: "∮",       insert: "\\oint" },
+      { label: "∯",       insert: "\\oiint" },
+      { label: "∫dx",     insert: "\\int #0 \\, d#?" },
+      { label: "∫ₐᵇ",    insert: "\\int_{#?}^{#?} #0 \\, d#?" },
+      { label: "∫∫dA",   insert: "\\iint_{#?} #0 \\, dA" },
+      { label: "∮C",     insert: "\\oint_{#?} #0 \\, d#?" },
+      { label: "∫∫∫dV",  insert: "\\iiint_{#?} #0 \\, dV" },
+      { label: "F(b)-F(a)", insert: "\\left[#0\\right]_{#?}^{#?}" },
+      { label: "u-sub",   insert: "\\int #0 \\, du" },
+    ],
+  },
+  {
+    label: "Derivatives",
+    isTemplate: true,
+    items: [
+      { label: "d/dx",       insert: "\\frac{d}{dx}" },
+      { label: "dy/dx",      insert: "\\frac{dy}{dx}" },
+      { label: "d²y/dx²",   insert: "\\frac{d^{2}y}{dx^{2}}" },
+      { label: "dⁿy/dxⁿ",  insert: "\\frac{d^{#?}#0}{dx^{#?}}" },
+      { label: "∂/∂x",      insert: "\\frac{\\partial}{\\partial x}" },
+      { label: "∂f/∂x",     insert: "\\frac{\\partial #0}{\\partial x}" },
+      { label: "∂²f/∂x²",  insert: "\\frac{\\partial^{2} #0}{\\partial x^{2}}" },
+      { label: "∂²f/∂x∂y", insert: "\\frac{\\partial^{2} #0}{\\partial x \\partial y}" },
+      { label: "f'(x)",      insert: "#0^{\\prime}(#?)" },
+      { label: "f''(x)",     insert: "#0^{\\prime\\prime}(#?)" },
+      { label: "ẋ",          insert: "\\dot{#0}" },
+      { label: "ẍ",          insert: "\\ddot{#0}" },
+      { label: "∇f",         insert: "\\nabla #0" },
+      { label: "∇²f",        insert: "\\nabla^{2} #0" },
+    ],
+  },
+  {
+    label: "Logarithmic",
+    isTemplate: true,
+    items: [
+      { label: "log",       insert: "\\log" },
+      { label: "ln",        insert: "\\ln" },
+      { label: "log₁₀",    insert: "\\log_{10}" },
+      { label: "log₂",     insert: "\\log_{2}" },
+      { label: "logₐ",     insert: "\\log_{#?}" },
+      { label: "logₐ(x)",  insert: "\\log_{#?}\\left(#0\\right)" },
+      { label: "ln(x)",    insert: "\\ln\\left(#0\\right)" },
+      { label: "log|x|",   insert: "\\log\\left|#0\\right|" },
+      { label: "eˣ",       insert: "e^{#0}" },
+      { label: "aˣ",       insert: "#?^{#0}" },
+      { label: "log(ab)",  insert: "\\log\\left(#0 \\cdot #?\\right)" },
+      { label: "log(a/b)", insert: "\\log\\left(\\frac{#0}{#?}\\right)" },
+      { label: "log(aⁿ)",  insert: "\\log\\left(#0^{#?}\\right)" },
+    ],
+  },
+  {
+    label: "Constants",
+    items: [
+      { label: "e", insert: "e" },
+      { label: "i", insert: "i" },
+      { label: "ℝ", insert: "\\mathbb{R}" },
+      { label: "ℤ", insert: "\\mathbb{Z}" },
+      { label: "ℕ", insert: "\\mathbb{N}" },
+      { label: "ℚ", insert: "\\mathbb{Q}" },
+    ],
+  },
+  {
+    label: "Sets",
+    items: [
+      { label: "⊆", insert: "\\subseteq" },
+      { label: "⊇", insert: "\\supseteq" },
+      { label: "∖", insert: "\\setminus" },
+      { label: "∩", insert: "\\cap" },
+      { label: "∪", insert: "\\cup" },
+      { label: "∅", insert: "\\emptyset" },
+    ],
+  },
+  {
+    label: "Logic",
+    items: [
+      { label: "∀", insert: "\\forall" },
+      { label: "∃", insert: "\\exists" },
+      { label: "¬", insert: "\\neg" },
+      { label: "∧", insert: "\\land" },
+      { label: "∨", insert: "\\lor" },
+    ],
+  },
 ];
 
 const CHEM_GROUPS = [
   {
-    label: "Elements (Period 1-2)",
+    label: "Period 1-2",
     isChem: true,
     items: ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne"].map((el) => ({
-      label: el,
-      insert: el,
-      cls: "chem-element",
+      label: el, insert: el, cls: "chem-element",
     })),
   },
   {
     label: "Period 3-4",
     isChem: true,
     items: ["Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca"].map((el) => ({
-      label: el,
-      insert: el,
-      cls: "chem-element",
+      label: el, insert: el, cls: "chem-element",
     })),
   },
   {
@@ -190,7 +272,7 @@ const CHEM_GROUPS = [
     ],
   },
   {
-    label: "Charges & Subscripts",
+    label: "Charges",
     isChem: true,
     items: [
       { label: "⁺",  insert: "^{+}",  cls: "chem-element" },
@@ -204,7 +286,7 @@ const CHEM_GROUPS = [
     ],
   },
   {
-    label: "Common Compounds",
+    label: "Compounds",
     isChem: true,
     items: [
       { label: "H₂O",   insert: "H2O",   cls: "chem-element" },
@@ -220,87 +302,25 @@ const CHEM_GROUPS = [
 ];
 
 /* ─────────────────────────────────────────────────────────────
-   SVG icons
-───────────────────────────────────────────────────────────── */
-const MathIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M8 5H5L3 12l5-2 5 2-2-7H8z" />
-    <path d="M21 5h-3l-2 7 5-2 5 2-2-7h-3z" />
-    <path d="M5 19h14" />
-  </svg>
-);
-
-const ChemIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M9 3H5L3 21h18L19 3h-4" />
-    <path d="M9 3a3 3 0 0 0 6 0" />
-    <path d="M8 12h8" />
-  </svg>
-);
-
-/* ─────────────────────────────────────────────────────────────
    Main Component
 ───────────────────────────────────────────────────────────── */
 export default function CustomMathEditor({ value = "", onChange }) {
-  const [mode, setMode] = useState("math"); // "math" | "chem"
+  const [mode, setMode] = useState("math");       // "math" | "chem"
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  
-  const modeRef = useRef(mode);
-  const mainMfRef = useRef(null);
+
+  const mainTextEditorRef = useRef(null);
   const popupMfRef = useRef(null);
-  const suppressSync = useRef(false);
 
   const [activeMathGroup, setActiveMathGroup] = useState(0);
   const [activeChemGroup, setActiveChemGroup] = useState(0);
 
-  useEffect(() => {
-    modeRef.current = mode;
-  }, [mode]);
-
-  /* ── Configure popup math-field when mode tab switches ── */
+  /* ── Configure popup math-field when mode switches ── */
   useEffect(() => {
     const popupMf = popupMfRef.current;
-    if (!popupMf) return;
+    if (!popupMf || !isEditorOpen) return;
     popupMf.defaultMode = mode === "chem" ? "text" : "math";
-    if (isEditorOpen) {
-      popupMf.focus();
-    }
+    requestAnimationFrame(() => popupMf.focus());
   }, [mode, isEditorOpen]);
-
-  /* ── Setup Main MathField (Sync & Events) ── */
-  useEffect(() => {
-    const mainMf = mainMfRef.current;
-    if (!mainMf) return;
-
-    if (!suppressSync.current && mainMf.value !== value) {
-      mainMf.value = value;
-    }
-
-    const handleInput = (e) => {
-      suppressSync.current = true;
-      onChange?.(e.target.value);
-      requestAnimationFrame(() => {
-        suppressSync.current = false;
-      });
-    };
-
-    const handleKeyDown = (e) => {
-      if (e.key === " ") {
-        e.preventDefault();
-        mainMf.executeCommand(["insert", "\\text{ }"]);
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        mainMf.executeCommand(["insert", "\\\\"]);
-      }
-    };
-
-    mainMf.addEventListener("input", handleInput);
-    mainMf.addEventListener("keydown", handleKeyDown);
-    return () => {
-      mainMf.removeEventListener("input", handleInput);
-      mainMf.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [value, onChange]);
 
   /* ── Keyboard shortcuts for Popup ── */
   useEffect(() => {
@@ -308,24 +328,25 @@ export default function CustomMathEditor({ value = "", onChange }) {
     if (!popupMf) return;
 
     const handleKeyDown = (e) => {
-      if (mode === "chem") return; // Allow natural space and enter in text mode
-
       if (e.key === " ") {
         e.preventDefault();
-        popupMf.executeCommand(["insert", "\\text{ }"]);
+        if (mode === "chem") {
+          popupMf.executeCommand(["insert", "\\, "]);
+        } else {
+          popupMf.executeCommand(["insert", "\\, "]);
+        }
       } else if (e.key === "Enter") {
+        if (mode === "chem") return;
         e.preventDefault();
         popupMf.executeCommand(["insert", "\\\\"]);
       }
     };
 
     popupMf.addEventListener("keydown", handleKeyDown);
-    return () => {
-      popupMf.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isEditorOpen, mode]); // Re-attach when editor opens/closes or mode changes
+    return () => popupMf.removeEventListener("keydown", handleKeyDown);
+  }, [isEditorOpen, mode]);
 
-  /* ── Insert symbol / template at the current cursor in Popup ── */
+  /* ── Insert symbol / template into popup math-field ── */
   const insertAtCursor = useCallback((insertText) => {
     const popupMf = popupMfRef.current;
     if (!popupMf) return;
@@ -333,95 +354,78 @@ export default function CustomMathEditor({ value = "", onChange }) {
     popupMf.executeCommand(["insert", insertText]);
   }, []);
 
-  const handleModeSwitch = (newMode) => {
+  const toggleEditor = (newMode) => {
+    if (isEditorOpen && mode === newMode) {
+      setIsEditorOpen(false);
+      requestAnimationFrame(() => mainTextEditorRef.current?.focus());
+      return;
+    }
     setMode(newMode);
     setIsEditorOpen(true);
   };
 
+  /* ── Insert from popup into main editor ── */
   const handleInsert = () => {
     const popupMf = popupMfRef.current;
-    const mainMf = mainMfRef.current;
-    if (!popupMf || !mainMf) return;
+    const mainTextEditor = mainTextEditorRef.current;
+    if (!popupMf || !mainTextEditor) return;
 
-    let mathValue = popupMf.value;
-    if (mode === "chem" && mathValue) {
-      mathValue = serializeChemValue(mathValue);
+    let latex = popupMf.getValue ? popupMf.getValue() : popupMf.value;
+    if (mode === "chem" && latex) {
+      latex = serializeChemValue(latex);
     }
-    
-    // Insert into main math field at cursor
-    mainMf.focus();
-    mainMf.executeCommand(["insert", mathValue]);
 
-    onChange?.(mainMf.value);
-    
-    // Clear the popup math field and close the editor
-    popupMf.value = "";
-    setIsEditorOpen(false);
+    if (!latex || latex.trim() === "") {
+      if (popupMf.setValue) popupMf.setValue("");
+      else popupMf.value = "";
+      setIsEditorOpen(false);
+      return;
+    }
+
+    mainTextEditor.insertMath(latex);
+
+    if (popupMf.setValue) popupMf.setValue("");
+    else popupMf.value = "";
+   
+    requestAnimationFrame(() => mainTextEditor.focus());
   };
 
-  const handleClose = () => {
-    setIsEditorOpen(false);
-  };
+  const handleClose = () => setIsEditorOpen(false);
 
   const groups = mode === "math" ? MATH_GROUPS : CHEM_GROUPS;
 
   return (
     <div className="cme-wrapper">
-
-      {/* ── Tab Bar ───────────────────────────────────────── */}
-      <div className="cme-tabs" role="tablist" aria-label="Editor mode">
-        <button
-          className={`cme-tab${mode === "math" && isEditorOpen ? " active" : ""}`}
-          role="tab"
-          aria-selected={mode === "math" && isEditorOpen}
-          onClick={() => handleModeSwitch("math")}
-          type="button"
-          title="Math Editor (MathType)"
-        >
-          <MathIcon />
-          MathType
-        </button>
-        <button
-          className={`cme-tab${mode === "chem" && isEditorOpen ? " active" : ""}`}
-          role="tab"
-          aria-selected={mode === "chem" && isEditorOpen}
-          onClick={() => handleModeSwitch("chem")}
-          type="button"
-          title="Chemistry Editor (ChemType)"
-        >
-          <ChemIcon />
-          ChemType
-        </button>
-      </div>
-
-      <div className="Input-question-box" >
-        <math-field
-          
-          ref={mainMfRef}
-          class="cme-main-mathfield"
-          math-virtual-keyboard-policy="manual"
-         
+      <div className="Input-question-box">
+        <CustomTextEditor
+          ref={mainTextEditorRef}
+          value={value}
+          onChange={onChange}
+          placeholder="Enter text here..."
+          onMathType={() => toggleEditor("math")}
+          onChemType={() => toggleEditor("chem")}
+          mathTypeActive={isEditorOpen && mode === "math"}
+          chemTypeActive={isEditorOpen && mode === "chem"}
         />
       </div>
 
-      {/* ── MathLive Visual Editor Popup ──── */}
+      {/* ── MathLive Visual Editor Popup ──────────────────── */}
       {isEditorOpen && (
         <div className="cme-editor-popup">
           <div className="cme-popup-header">
-            <span>{mode === "math" ? "Math Editor" : "Chemistry Editor"}</span>
-            <button className="cme-popup-close" onClick={handleClose} type="button">×</button>
+            <span>{mode === "math" ? "Math Editor " : "Chemistry Editor"}</span>
+           
           </div>
 
-          {/* ── Symbol / Template Toolbar ─────────────────────── */}
+          {/* Symbol / Template Toolbar */}
           <div className="cme-toolbar" role="toolbar" aria-label="Symbol palette">
-            {/* Group tabs */}
             <div className="cme-toolbar-groups">
               {groups.map((group, index) => {
                 const isActive = mode === "math" ? activeMathGroup === index : activeChemGroup === index;
                 return (
-                  <button 
+                  <button
                     key={group.label}
-                    className={`cme-group-tab ${isActive ? "active" : ""}`}
+                    className={`cme-group-tab${isActive ? " active" : ""}`}
                     type="button"
                     onClick={() => {
                       if (mode === "math") setActiveMathGroup(index);
@@ -433,13 +437,11 @@ export default function CustomMathEditor({ value = "", onChange }) {
                 );
               })}
             </div>
-
-            {/* Active group items */}
             <div className="cme-toolbar-items">
               {groups[mode === "math" ? activeMathGroup : activeChemGroup]?.items.map((item, i) => {
                 const currentGroup = groups[mode === "math" ? activeMathGroup : activeChemGroup];
                 return (
-                  <button  
+                  <button
                     key={`${currentGroup.label}-${i}`}
                     type="button"
                     className={`cme-btn${currentGroup.isTemplate ? " template" : ""}${item.cls ? ` ${item.cls}` : ""}`}
@@ -456,23 +458,49 @@ export default function CustomMathEditor({ value = "", onChange }) {
             </div>
           </div>
 
-          <div className="cme-mathfield-container">
+          <div
+            className="cme-mathfield-container"
+            onMouseDown={(e) => {
+              // If the click landed on the math-field itself, let the browser
+              // handle focus + caret placement natively (do NOT preventDefault).
+              // If click landed on container padding, preventDefault to stop
+              // focus theft, then manually focus the math-field.
+              if (e.target === popupMfRef.current ||
+                  (popupMfRef.current && popupMfRef.current.contains(e.target))) {
+                return; // browser handles it
+              }
+              e.preventDefault();
+              requestAnimationFrame(() => {
+                try { popupMfRef.current?.focus(); } catch (_) {}
+              });
+            }}
+          >
             <math-field
               ref={popupMfRef}
               class="cme-mathfield"
+              tabIndex={0}
               math-virtual-keyboard-policy="manual"
               placeholder={
                 mode === "math"
-                  ? "Click here and start typing your formula…"
-                  : "Click here and type your chemical formula…"
+                  ? ""
+                  : ""
               }
             />
           </div>
 
+          {/* ///cancel and insert div */}
+         <div  style={{display:"flex", justifyContent:"flex-end"}}>
+           <div className="cme-popup-footer">
+            <button type="button" style={{backgroundColor:"#9ca3af",color:"black"}} className="cme-insert-btn"  onClick={handleClose}>
+              Cancel 
+            </button>
+          </div>
+
           <div className="cme-popup-footer">
             <button type="button" className="cme-insert-btn" onClick={handleInsert}>
-              Insert
+              Insert 
             </button>
+          </div>
           </div>
         </div>
       )}

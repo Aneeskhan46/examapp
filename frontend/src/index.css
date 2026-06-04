@@ -209,6 +209,7 @@ h3 {
 input,
 select {
   width: 100%;
+  max-width: 100%;
   min-height: 46px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -290,6 +291,26 @@ select:focus {
 .stack {
   display: grid;
   gap: 16px;
+}
+
+.stack label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.stack > div {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.ck-editor,
+.cme-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .dashboard-hero {
