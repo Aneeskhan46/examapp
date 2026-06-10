@@ -8,29 +8,14 @@ import API from "../../services/api";
 import 'katex/dist/katex.min.css';
 import katex from "katex";
 import 'katex/contrib/mhchem'; // chemistry rendering support
+import "mathlive";
 
-function MathBlock({ math }) {
 
-  // clean unsupported latex commands
-  const cleanedMath = (math || "")
-    .replace(/\\displaylines/g, "")
-    .trim();
-
-  let html;
-
-  try {
-    html = katex.renderToString(cleanedMath, {
-      displayMode: true,
-      throwOnError: false,
-      strict: "ignore",
-      trust: true,
-    });
-  } catch {
-    html = cleanedMath;
-  }
-
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
-}
+/* ─────────────────────────────────────────────────────────────
+   Serialization constants — must match CustomTextEditor.jsx
+───────────────────────────────────────────────────────────── */
+const MATH_OPEN = "§MATH§";
+const MATH_CLOSE = "§END§";
 
 function QuestionPreview({ value = "" }) {
   const containerRef = useRef(null);
@@ -42,6 +27,7 @@ function QuestionPreview({ value = "" }) {
     // Clear previous render
     el.innerHTML = "";
 
+    // First pass: handle §MATH§...§END§ markers (from CustomMathEditor)
     const regex = new RegExp(
       escapeRegex(MATH_OPEN) + "([\\s\\S]*?)" + escapeRegex(MATH_CLOSE),
       "g"
@@ -54,39 +40,30 @@ function QuestionPreview({ value = "" }) {
       // Text before this math block
       if (match.index > lastIndex) {
         const text = value.slice(lastIndex, match.index);
-        appendTextFragment(el, text);
+        appendHtmlContent(el, text);
       }
 
       // Math block — read-only math-field
       const latex = match[1];
-      const mf = document.createElement("math-field");
-      mf.setAttribute("read-only", "");
-      mf.setAttribute("style", [
-        "display:inline-block",
-        "vertical-align:middle",
-        "border:none",
-        "background:transparent",
-        "outline:none",
-        "padding:0 2px",
-        "margin:0 1px",
-        "font-size:inherit",
-        "min-height:auto",
-        "--primary-color:#0f766e",
-      ].join(";"));
-      // Set value after upgrade
-      requestAnimationFrame(() => {
-        if (mf.setValue) mf.setValue(latex);
-        else mf.value = latex;
-      });
-      el.appendChild(mf);
+      el.appendChild(createPreviewMathField(latex));
 
       lastIndex = match.index + match[0].length;
     }
 
     // Remaining text after last math block
     if (lastIndex < value.length) {
-      appendTextFragment(el, value.slice(lastIndex));
+      appendHtmlContent(el, value.slice(lastIndex));
     }
+
+    // Second pass: find any <span class="math-tex"> elements
+    // that came from CKEditor HTML and upgrade them to math-fields
+    el.querySelectorAll("span.math-tex").forEach((span) => {
+      const latex = span.getAttribute("data-latex") || span.textContent || "";
+      if (latex) {
+        const mf = createPreviewMathField(latex);
+        span.replaceWith(mf);
+      }
+    });
   }, [value]);
 
   return (
@@ -96,26 +73,44 @@ function QuestionPreview({ value = "" }) {
     />
   );
 }
-/* ─────────────────────────────────────────────────────────────
-   Serialization constants — must match CustomTextEditor.jsx
-───────────────────────────────────────────────────────────── */
-const MATH_OPEN = "§MATH§";
-const MATH_CLOSE = "§END§";
 
+/* Creates a read-only math-field for preview */
+function createPreviewMathField(latex) {
+  const mf = document.createElement("math-field");
+  mf.setAttribute("read-only", "");
+  mf.setAttribute("style", [
+    "display:inline-block",
+    "vertical-align:middle",
+    "border:none",
+    "background:transparent",
+    "outline:none",
+    "padding:0 2px",
+    "margin:0 1px",
+    "font-size:inherit",
+    "min-height:auto",
+    "--primary-color:#0f766e",
+  ].join(";"));
+  // Set value after upgrade
+  requestAnimationFrame(() => {
+    if (mf.setValue) mf.setValue(latex);
+    else mf.value = latex;
+  });
+  return mf;
+}
 
-//escape regexfunction
 function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-
-//appendTextFragment
-function appendTextFragment(parent, text) {
-  if (!text) return;
+/* Appends sanitized HTML content to a parent element */
+function appendHtmlContent(parent, html) {
+  if (!html) return;
   const tmp = document.createElement("div");
-  tmp.innerHTML = text;
+  tmp.innerHTML = html;
   const allowed = new Set([
     "B", "STRONG", "I", "EM", "U", "BR", "DIV", "P", "SPAN", "UL", "OL", "LI",
+    "SUB", "SUP", "H1", "H2", "H3", "H4", "BLOCKQUOTE", "A", "TABLE", "THEAD",
+    "TBODY", "TR", "TH", "TD", "FIGURE", "FIGCAPTION", "COLGROUP", "COL",
   ]);
   const copy = (src, dest) => {
     Array.from(src.childNodes).forEach((node) => {
@@ -123,12 +118,36 @@ function appendTextFragment(parent, text) {
         dest.appendChild(document.createTextNode(node.textContent));
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const tag = node.nodeName;
-        if (tag === "BR") {
+        if (tag === "MATH-FIELD") {
+          // Preserve math-field elements as-is
+          dest.appendChild(node.cloneNode(true));
+        } else if (tag === "BR") {
           dest.appendChild(document.createElement("br"));
+        } else if (tag === "SPAN" && node.classList.contains("math-tex")) {
+          // Keep math-tex spans so they can be upgraded in the second pass
+          const span = document.createElement("span");
+          span.className = "math-tex";
+          if (node.getAttribute("data-latex")) {
+            span.setAttribute("data-latex", node.getAttribute("data-latex"));
+          }
+          span.textContent = node.textContent;
+          dest.appendChild(span);
         } else if (allowed.has(tag)) {
-          const el = document.createElement(
-            tag === "STRONG" ? "b" : tag === "EM" ? "i" : tag.toLowerCase()
-          );
+          const map = { STRONG: "b", EM: "i" };
+          const el = document.createElement(map[tag] || tag.toLowerCase());
+          // Copy href for links
+          if (tag === "A" && node.getAttribute("href")) {
+            el.setAttribute("href", node.getAttribute("href"));
+            el.setAttribute("target", "_blank");
+            el.setAttribute("rel", "noopener noreferrer");
+          }
+          // Copy table-related attributes for proper rendering
+          const tableAttrs = ["style", "class", "colspan", "rowspan"];
+          tableAttrs.forEach((attr) => {
+            if (node.getAttribute(attr)) {
+              el.setAttribute(attr, node.getAttribute(attr));
+            }
+          });
           copy(node, el);
           dest.appendChild(el);
         } else {
@@ -217,17 +236,10 @@ export default function Exam() {
         </section>
         {questions.map((question,index) => (
           <article className="question-preview" key={question._id}>
-
-            {/* //i change this */}
-            {/* <h3>{question.question}</h3> */}
-            {/* <MathBlock math={question.question} /> */}
-            
-        <div>
-          <strong>{index + 1}.</strong>
-           <QuestionPreview value={question.question} />
-          {/* <MathBlock math={question.question} /> */}
-        </div>
-
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap' }}>
+              <strong>{index + 1}.</strong>
+              <QuestionPreview value={question.question} />
+            </div>
 
             <div className="option-list">
               {Object.entries(question.options).map(([key, value]) => (
@@ -238,7 +250,8 @@ export default function Exam() {
                     value={key}
                     onChange={() => handleAnswer(question._id, key)}
                   />
-                  <strong>{key}.</strong> <MathBlock math={value} />
+                  <strong>{key}.</strong>
+                  <span style={{ display: 'inline', verticalAlign: 'middle' }}>{value}</span>
                 </label>
               ))}
             </div>

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import API from "../../services/api";
-import MathEditor from "../../components/MathEditor";
 import "mathlive";
 import CkEditor from "../../components/Ckeditor";
 
@@ -108,7 +107,7 @@ function appendHtmlContent(parent, html) {
   const allowed = new Set([
     "B", "STRONG", "I", "EM", "U", "BR", "DIV", "P", "SPAN", "UL", "OL", "LI",
     "SUB", "SUP", "H1", "H2", "H3", "H4", "BLOCKQUOTE", "A", "TABLE", "THEAD",
-    "TBODY", "TR", "TH", "TD",
+    "TBODY", "TR", "TH", "TD", "FIGURE", "FIGCAPTION", "COLGROUP", "COL",
   ]);
   const copy = (src, dest) => {
     Array.from(src.childNodes).forEach((node) => {
@@ -139,6 +138,13 @@ function appendHtmlContent(parent, html) {
             el.setAttribute("target", "_blank");
             el.setAttribute("rel", "noopener noreferrer");
           }
+          // Copy table-related attributes for proper rendering
+          const tableAttrs = ["style", "class", "colspan", "rowspan"];
+          tableAttrs.forEach((attr) => {
+            if (node.getAttribute(attr)) {
+              el.setAttribute(attr, node.getAttribute(attr));
+            }
+          });
           copy(node, el);
           dest.appendChild(el);
         } else {
@@ -277,7 +283,7 @@ export default function CreateQuestion() {
           </label>
 
           {/* Question Title with Math Editor */}
-          <div style={{ display: "grid", gap: "7px", color: "var(--heading)", fontWeight: 700 }}>
+          {/* <div style={{ display: "grid", gap: "7px", color: "var(--heading)", fontWeight: 700 }}>
             Question Title
 
             <br></br>
@@ -287,7 +293,7 @@ export default function CreateQuestion() {
               value={question}
               onChange={setQuestion}
             />
-          </div>
+          </div> */}
 
   <br></br>
   

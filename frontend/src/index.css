@@ -427,10 +427,40 @@ select:focus {
   border-radius: 8px;
   padding: 14px;
   background: #f8fafc;
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 .question-preview p {
   margin: 6px 0 0;
+}
+
+.question-preview table {
+  min-width: 0;
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  margin: 8px 0;
+}
+
+.question-preview th,
+.question-preview td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.question-preview th {
+  background: #eef2f7;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.question-preview figure {
+  margin: 8px 0;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .table-wrap {
@@ -463,24 +493,36 @@ td {
 }
 
 .option-list {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin: 14px 0;
 }
 
 .option-row {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
   background: #fff;
+  flex: 1 1 calc(50% - 5px);
+  min-width: 200px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.option-row:hover {
+  border-color: var(--primary);
+  background: #f0faf9;
 }
 
 .option-row input {
   width: auto;
   min-height: auto;
+  cursor: pointer;
 }
 
 .result-card {

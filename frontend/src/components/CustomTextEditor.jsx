@@ -278,6 +278,7 @@ const CustomTextEditor = forwardRef(function CustomTextEditor(
     placeholder = "Enter text here...",
     onMathType,
     onChemType,
+    onMathEdit,
     mathTypeActive = false,
     chemTypeActive = false,
   },
@@ -357,8 +358,16 @@ const CustomTextEditor = forwardRef(function CustomTextEditor(
       mf._cteListenerAttached = true;
       mf.addEventListener("input", emitChange);
       mf.addEventListener("mousedown", (e) => {
-        e.preventDefault();
-        editorRef.current?.focus();
+        if (e.button === 0) { // Left click
+          e.preventDefault();
+          const latex = getMathLatex(mf);
+          const isChem = /^\\ce\{/.test(latex);
+          if (onMathEdit) {
+            onMathEdit({ mf, latex, isChem });
+          } else {
+            editorRef.current?.focus();
+          }
+        }
       });
       mf.addEventListener("focus", (e) => {
         e.preventDefault();
@@ -635,32 +644,6 @@ const CustomTextEditor = forwardRef(function CustomTextEditor(
     syncActiveFormats();
   }, [syncActiveFormats]);
 
-  const setCaretFromPoint = useCallback((x, y) => {
-    try {
-      let range = null;
-      if (document.caretRangeFromPoint) range = document.caretRangeFromPoint(x, y);
-      else if (document.caretPositionFromPoint) {
-        const pos = document.caretPositionFromPoint(x, y);
-        range = document.createRange();
-        range.setStart(pos.offsetNode, pos.offset);
-        range.collapse(true);
-      }
-      if (range) {
-        const sel = window.getSelection();
-        if (!sel) return;
-        sel.removeAllRanges();
-        sel.addRange(range);
-        try {
-          savedRangeRef.current = range.cloneRange();
-        } catch (err) {
-          /* ignore clone errors */
-        }
-      }
-    } catch (err) {
-      /* ignore */
-    }
-  }, []);
-
   const handleContentMouseDown = useCallback((e) => {
     // Do NOT call e.preventDefault() here — that suppresses native caret
     // rendering. The browser places the caret natively on mousedown; we just
@@ -748,6 +731,11 @@ const CustomTextEditor = forwardRef(function CustomTextEditor(
           savedRangeRef.current = saveSelection(el);
           emitChange();
         });
+      },
+      updateMath(mf, newLatex) {
+        if (mf.setValue) mf.setValue(newLatex, { silenceNotifications: true });
+        else mf.value = newLatex;
+        emitChange();
       },
       getValue() {
         return serializeEditor(editorRef.current);
