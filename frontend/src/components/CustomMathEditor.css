@@ -1030,7 +1030,7 @@ input.cme-counter-val[type=number] {
 .cme-more-trigger-btn {
   position: absolute;
   top: 0;
-  right: -1px;
+  right: 2px;
   width: 7px;
   height: 100%;
   background: transparent;
