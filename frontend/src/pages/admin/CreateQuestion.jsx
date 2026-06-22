@@ -295,13 +295,13 @@ export default function CreateQuestion() {
             />
           </div> */}
 
-  <br></br>
-  
+          <br></br>
+
           {/* //cke editor */}
           <h2>CkEditor Text editor</h2>
-           <div>
-             <CkEditor value={question} onChange={setQuestion} />   
-           </div>
+          <div>
+            <CkEditor value={question} onChange={setQuestion} />
+          </div>
 
 
           {["A", "B", "C", "D"].map((optionKey) => (
@@ -341,7 +341,7 @@ export default function CreateQuestion() {
             <p className="eyebrow">Added Questions </p>
             <h2>{selectedExam?.name || "No exam selected"}</h2>
           </div>
-
+           {console.log("👉 exist DATA:", existingQuestions)}
           {existingQuestions.length === 0 ? (
             <p>No questions added yet.</p>
           ) : (
@@ -351,7 +351,10 @@ export default function CreateQuestion() {
                   <strong>{index + 1}.</strong>
                   {/* Renders plain text + math-field blocks */}
                   <QuestionPreview value={item.question} />
+
                 </div>
+                {console.log("👉 QUESTION DATA:", item.question)}
+
                 <p>Correct answer: Option {item.correctAnswer}</p>
               </article>
             ))

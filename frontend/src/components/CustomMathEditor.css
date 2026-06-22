@@ -63,7 +63,7 @@
 /* ── Symbol Toolbar (Wiris Style) ────────────────────────── */
 .cme-toolbar {
   background: #f4f7f9;
- 
+
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -74,65 +74,90 @@
 .cme-toolbar-groups {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
   background: #f4f7f9;
-  padding: 6px 8px 0 17px;
-  gap: 4px;
- 
+  padding: 8px 8px 0 17px;
+  gap: 3px;
+  border: none;
 }
 
 .cme-group-tab {
-  background: #5b7b90;
-  border: 1px solid #40596b;
-  border-bottom: 1px solid #cccccc;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  padding: 0px 10px;
+  background: url("data:image/png;base64,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") no-repeat top / 100% 135%;
+  border: none;
+  border-bottom: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 0px;
+  width: 44px;
+  margin: 0px;
   font-size: 11px;
   font-weight: bold;
   color: #ffffff;
   cursor: pointer;
   transition: all 0.12s;
   white-space: nowrap;
-  margin-bottom: -1px;
   position: relative;
   z-index: 1;
-  height: 26px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cme-group-tab:hover {
+  background: #95ae99;
+  color: #ffffff;
+}
+
+.cme-group-tab:last-child:not(.active) {
+  background: #DC9E9E;
+}
+
+.cme-group-tab:last-child:not(.active):hover {
+  background: #95ae99;
+}
+
+.cme-group-tab.active {
+
+  background: linear-gradient(to bottom, #e6eef4 0%, #f4f7f9 100%);
+  color: #333333;
+  border: 1px solid #778E9A;
+  border-bottom: none;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: 0px;
+  width: 44px;
+  margin: 0px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.12s;
+  white-space: nowrap;
+  margin-bottom: -2px;
+  position: relative;
+  z-index: 2;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
 }
 
-.cme-group-tab:hover {
-  background: #5b7e95;
-  color: #ffffff;
-}
-
-.cme-group-tab.active {
-  background: #f4f7f9;
-  color: #333333;
-  border-top: 1px solid #b2c4d0;
-  border-left: 1px solid #b2c4d0;
-  border-right: 1px solid #b2c4d0;
-  border-bottom: none;
-  z-index: 2;
-}
-
 .cme-toolbar-items {
-  background: linear-gradient(to bottom, #f4f7f9 0%, #e6eef4 100%);
-  border-bottom: 1px solid #b2c4d0;
-  border-radius: 4px;
+  background: linear-gradient(to bottom, #f4f7f9 0%, #d8dbe0 100%);
+  border: 1px solid #778E9A;
+
   margin: 0px 8px;
-  padding: 0px 6px;
+  padding: 0px 0px;
   display: flex;
   flex-direction: row;
   align-items: stretch;
   gap: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  width: calc(100% - 16px);
+  width: calc(100% - 19px);
   box-sizing: border-box;
-  height: 71px;
+  height: 85px;
   box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.6);
 }
 
@@ -182,6 +207,7 @@
   background: transparent;
   color: #000000;
   font-size: 13px;
+  font-weight: 700;
   font-family: "Latin Modern Math", "STIX Two Math", "Times New Roman", serif;
   cursor: pointer;
   display: inline-flex;
@@ -212,6 +238,69 @@
   color: #000000;
 }
 
+.cme-symbol-subgroup--small .cme-btn {
+  min-width: 22px;
+  height: 24px;
+  font-size: 14px;
+  padding: 0 1px;
+}
+
+.cme-dark-large .cme-btn {
+  min-width: 26px;
+  height: 28px;
+  font-size: 16px;
+  font-weight: 900;
+
+  color: #ffffff;
+}
+
+.cme-dark-large .cme-btn:hover {
+
+  color: #ffffff;
+}
+
+
+.cme-matrix-subgroup {
+  row-gap: 2px;
+}
+
+.cme-matrix-subgroup .cme-btn {
+  min-width: 12px;
+  height: 40px;
+
+  font-weight: bold;
+  font-size: 15px !important;
+}
+
+.cme-matrix-subgroup .cme-btn:hover {
+  background: #ffffff;
+  border-color: #7eaef4;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.cme-more-popup-btn.cme-matrix-subgroup {
+  min-width: 12px;
+  height: 40px;
+  font-weight: bold;
+  font-size: 15px !important;
+}
+
+.cme-more-popup-btn.cme-matrix-subgroup math-field {
+  font-size: 10px !important;
+}
+
+.cme-trig-subgroup .cme-btn {
+  font-size: 15px;
+  font-weight: 800;
+  min-width: 32px;
+  height: 28px;
+}
+
+.cme-matrix-subgroup math-field {
+  font-size: 10px !important;
+}
+
+
 .cme-btn.chem-element {
   font-weight: bold;
   font-size: 12px;
@@ -223,6 +312,73 @@
 .cme-btn.chem-element:hover {
   background: #ffffff;
   border-color: #7eaef4;
+}
+
+/* Periodic Table Colors */
+.pt-alkali {
+  background-color: #FF9800 !important;
+  color: #000 !important;
+}
+
+.pt-alkaline {
+  background-color: #FFEB3B !important;
+  color: #000 !important;
+}
+
+.pt-transition {
+  background-color: #FA709A !important;
+  color: #000 !important;
+}
+
+.pt-lanthanide {
+  background-color: #FFA07A !important;
+  color: #000 !important;
+}
+
+.pt-actinide {
+  background-color: #FA709A !important;
+  color: #000 !important;
+}
+
+.pt-metalloid {
+  background-color: #00E5FF !important;
+  color: #000 !important;
+}
+
+.pt-nonmetal {
+  background-color: #00FF00 !important;
+  color: #000 !important;
+}
+
+.pt-noble {
+  background-color: #84FFFF !important;
+  color: #000 !important;
+}
+
+.pt-unknown {
+  background-color: #FFFFFF !important;
+  color: #000 !important;
+}
+
+.pt-empty {
+  visibility: hidden !important;
+  pointer-events: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Adjustments for the periodic table grid buttons to make them compact */
+.cme-more-popup-btn[class*="pt-"] {
+  font-size: 11px;
+  min-width: 24px;
+  height: 20px;
+  line-height: 1;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  border-radius: 1px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0;
+  padding: 0;
 }
 
 .cme-btn.chem-arrow,
@@ -254,7 +410,7 @@
   border-radius: 4px;
   margin: 1px 12px;
   flex: 1;
-  min-height: 100px;
+  min-height: 130px;
   overflow: auto;
   display: block;
   box-sizing: border-box;
@@ -299,6 +455,7 @@ math-field.cme-mathfield {
   background: transparent;
   box-sizing: border-box;
   cursor: text;
+  overflow: visible !important;
 
   /* ── MathLive theme tokens: Green Caret and Accent ────── */
   --hue: 120;
@@ -319,7 +476,10 @@ math-field.cme-mathfield:focus-within {
 
 math-field.cme-mathfield::part(container) {
   min-height: 40px;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  overflow: visible;
 }
 
 math-field.cme-mathfield::part(virtual-keyboard-toggle) {
@@ -387,11 +547,19 @@ math-field.cme-main-mathfield {
   background: #ffffff;
   transition: border-color 0.2s, box-shadow 0.2s;
   cursor: text;
+  overflow: visible !important;
 }
 
 math-field.cme-main-mathfield:focus-within {
-  border-color: #5b7b90;
+  border-color: #778e9a;
   box-shadow: 0 0 0 2px rgba(91, 123, 144, 0.2);
+}
+
+math-field.cme-main-mathfield::part(container) {
+  align-items: flex-start;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  overflow: visible;
 }
 
 math-field.cme-main-mathfield::part(virtual-keyboard-toggle),
@@ -423,6 +591,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -434,7 +603,8 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   align-items: center;
   justify-content: space-between;
   padding: 6px 12px;
-  background: #5b7b90; /* Steel-blue / Slate-blue */
+  background: #778e9a;
+  /* Steel-blue / Slate-blue */
   color: #ffffff;
   font-weight: 500;
   font-size: 13px;
@@ -466,7 +636,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 /* Standard minimize / maximize decorations on close button */
 .cme-popup-close::before {
   content: '—   ⤢   ';
-  
+
   font-size: 11px;
   color: rgba(255, 255, 255, 0.85);
   margin-right: 8px;
@@ -486,9 +656,10 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 .cme-popup-footer {
   padding: 10px 12px;
   background: #f4f7f9;
- 
+
   display: flex;
-  justify-content: flex-start; /* Left-aligned buttons as shown in image */
+  justify-content: flex-start;
+  /* Left-aligned buttons as shown in image */
   gap: 8px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -496,7 +667,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-insert-btn {
-  background: #5b7b90;
+  background: #778e9a;
   color: #ffffff;
   border: 1px solid #4a687c;
   padding: 6px 20px;
@@ -579,7 +750,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-matrix-cell.selected {
-  background: #5b7b90;
+  background: #778e9a;
   border-color: #4a687c;
 }
 
@@ -624,16 +795,18 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   padding: 0;
   border-radius: 2px;
   border: 1px solid #d3d3d3;
+  flex: 1;
 }
 
 .cme-matrix-hover-row {
   display: flex;
   gap: 0;
+
 }
 
 .cme-matrix-hover-cell {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border: 1px solid #d3d3d3;
   border-radius: 0;
   background: #ffffff;
@@ -647,7 +820,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-matrix-hover-cell.selected {
-  background-color: #5b7b90;
+  background-color: #778e9a;
   border-color: #4a687c;
 }
 
@@ -672,16 +845,40 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-counter-val {
-  min-width: 20px;
+
+  width: 32px;
   text-align: center;
-  background: #f3f3f3;
+  background: #ffffff;
   border-radius: 2px;
-  padding: 1px 4px;
+  padding: 1px 2px;
   font-family: monospace;
   font-size: 20px;
   font-weight: 600;
   color: #000000;
   border: 1px solid #d3d3d3;
+  box-sizing: border-box;
+}
+
+input.cme-counter-val {
+  outline: none;
+}
+
+input.cme-counter-val:focus {
+  border-color: #778e9a;
+  box-shadow: 0 0 0 1px rgba(91, 123, 144, 0.2);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input.cme-counter-val::-webkit-outer-spin-button,
+input.cme-counter-val::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input.cme-counter-val[type=number] {
+  appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 .cme-counter-btns {
@@ -709,11 +906,11 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 
 .cme-counter-btns button:hover {
   background: #cbd5e1;
-  color: #5b7b90;
+  color: #778e9a;
 }
 
 .cme-matrix-insert-btn {
-  background: #5b7b90;
+  background: #778e9a;
   color: #ffffff;
   border: none;
   padding: 2px 6px;
@@ -732,11 +929,12 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 
 /* ── CKEditor specific overrides ── */
 .cme-matrix-hover-popover.ck-only {
-  width: 101px;
-  height: 120px;
+  min-width: 101px;
+  min-height: 120px;
+  width: auto;
+  height: auto;
   box-sizing: border-box;
   padding: 6px;
-  overflow: hidden;
   gap: 4px;
   display: flex;
   flex-direction: column;
@@ -744,7 +942,6 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-matrix-hover-popover.ck-only .cme-matrix-hover-grid {
-  width: 100%;
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -755,16 +952,17 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-matrix-hover-popover.ck-only .cme-matrix-hover-row {
-  width: 100%;
   display: flex;
   gap: 0;
 }
 
 .cme-matrix-hover-popover.ck-only .cme-matrix-hover-cell {
-  flex: 1;
+  width: 12px;
   height: 12px;
+  flex-shrink: 0;
   border: 0.5px solid #d3d3d3;
   border-radius: 0;
+  box-sizing: border-box;
 }
 
 .cme-matrix-hover-popover.ck-only .cme-matrix-hover-footer {
@@ -780,10 +978,14 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   font-size: 12px;
 }
 
-.cme-matrix-hover-popover.ck-only .cme-counter-val {
+.cme-matrix-hover-popover.ck-only input.cme-counter-val {
   min-width: 10px;
+  width: 22px;
   font-size: 12px;
   padding: 0 2px;
+  height: 16px;
+  background: #ffffff;
+  border: 1px solid #d3d3d3;
 }
 
 .cme-matrix-hover-popover.ck-only .cme-counter-btns button {
@@ -791,4 +993,129 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   height: 7px;
   font-size: 5px;
 }
-.cme-btn.active, .cme-select.active { background-color: #fcf4b6 !important; border-color: #e6c229 !important; color: #000000 !important; }
+
+.cme-btn.active,
+.cme-select.active {
+  background-color: #fcf4b6 !important;
+  border-color: #e6c229 !important;
+  color: #000000 !important;
+}
+
+.cme-btn,
+.cme-btn *,
+.cme-btn math-field,
+.cme-matrix-btn-wrapper,
+.cme-matrix-btn-wrapper button,
+.cme-matrix-btn-wrapper button * {
+  cursor: pointer !important;
+}
+
+.cme-group-tab,
+.cme-group-tab * {
+  cursor: pointer !important;
+}
+
+.cme-group-tab math-field {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* ── More-trigger vertical button ─────────────────────────── */
+/* The subgroup that has a "more" trigger gets position:relative (set inline) */
+.cme-subgroup-has-more {
+  /* leave room for the trigger button on the right */
+  padding-right: 10px;
+}
+
+.cme-more-trigger-btn {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 7px;
+  height: 100%;
+  background: transparent;
+  border: none;
+
+  color: #517085;
+  font-size: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 3px;
+  z-index: 10;
+  writing-mode: vertical-rl;
+  letter-spacing: 2px;
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+  line-height: 1;
+}
+
+.cme-more-trigger-btn:hover {
+  background: #778e9a;
+  color: #ffffff;
+  border-color: #40596b;
+}
+
+/* ── More operators popup (WirisType style) ─────────────────── */
+.cme-more-popup {
+  position: fixed;
+  z-index: 99999;
+  background: linear-gradient(to bottom, #f4f7f9 0%, #e6eef4 100%);
+  border: 1px solid #99b1c1;
+  border-radius: 5px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  padding: 9px 0px;
+  display: grid;
+  gap: 1px;
+  min-width: 25px;
+  animation: cmeMoreFadeIn 0.12s ease-out;
+}
+
+@keyframes cmeMoreFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.cme-more-popup--shift-left {
+  transform: translateX(calc(-100% + 14px)) !important;
+}
+
+.cme-more-popup-btn {
+  min-width: 30px;
+  height: 32px;
+  padding: 0 2px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: #000000;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: "Latin Modern Math", "STIX Two Math", "Times New Roman", serif;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s, border-color 0.1s;
+  user-select: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.cme-more-popup-btn:hover {
+  background: #ffffff;
+  border-color: #7eaef4;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.cme-more-popup-btn:active {
+  background: #cbdff9;
+  border-color: #4a90e2;
+}
