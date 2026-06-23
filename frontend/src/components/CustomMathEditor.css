@@ -1122,3 +1122,7 @@ input.cme-counter-val[type=number] {
   background: #cbdff9;
   border-color: #4a90e2;
 }
+.nudge-up { position: relative; top: -2px; }
+.nudge-down { position: relative; top: 2px; }
+.nudge-left { position: relative; left: -2px; }
+.nudge-right { position: relative; left: 2px; }

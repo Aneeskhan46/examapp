@@ -1646,7 +1646,11 @@ const MATH_GROUPS = [
 
     items: [
 
-      {type: 'sep', cols: 2, cls: 'cme-trig-subgroup'}
+      {type: 'sep', cols: 2, cls: 'cme-trig-subgroup'},
+      { label: '↑', title: 'Nudge Up', action: 'NUDGE_UP', requiresSelection: true, width: '40px' },
+      { label: '↓', title: 'Nudge Down', action: 'NUDGE_DOWN', requiresSelection: true, width: '40px' },
+      { label: '←', title: 'Nudge Left', action: 'NUDGE_LEFT', requiresSelection: true, width: '40px' },
+      { label: '→', title: 'Nudge Right', action: 'NUDGE_RIGHT', requiresSelection: true, width: '40px' }
        
 
     ]
@@ -3676,6 +3680,7 @@ function MatrixHoverGrid({ matrixType, x, y, onSelect, onMouseEnter, onMouseLeav
 function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   const popupMfRef = useRef(null);
   const [activeGroup, setActiveGroup] = useState(0);
+  const [hasSelection, setHasSelection] = useState(false);
   const [activeMatrix, setActiveMatrix] = useState(null); // { type, x, y }
   const [showSpecialChars, setShowSpecialChars] = useState(null); // { x, y } or null
   const [showColorPicker, setShowColorPicker] = useState(null); // { x, y } or null
@@ -4074,6 +4079,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                   </button>
                 )}
                 {subgroup.items.map((item, i) => {
+                  if (item.requiresSelection && !hasSelection) return null;
                   const currentGroup = groups[activeGroup];
                   if (item.type === 'dropdown') {
                     const isFont = item.label === 'Font...';
@@ -4230,6 +4236,14 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                           popupMfRef.current?.executeCommand('undo');
                         } else if (item.action === 'REDO') {
                           popupMfRef.current?.executeCommand('redo');
+                        } else if (item.action === 'NUDGE_UP') {
+                          popupMfRef.current?.executeCommand(['insert', '\\raisebox{2px}{#0}']);
+                        } else if (item.action === 'NUDGE_DOWN') {
+                          popupMfRef.current?.executeCommand(['insert', '\\raisebox{-2px}{#0}']);
+                        } else if (item.action === 'NUDGE_LEFT') {
+                          popupMfRef.current?.executeCommand(['insert', '\\hspace{-2px}#0']);
+                        } else if (item.action === 'NUDGE_RIGHT') {
+                          popupMfRef.current?.executeCommand(['insert', '\\hspace{2px}#0']);
                         } else {
                           insertAtCursor(item.insert);
                         }
