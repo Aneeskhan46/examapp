@@ -982,7 +982,7 @@ const MATH_GROUPS = [
   },
 
   {
-    label: 'bmatrix', fontSize: '5px', mathLabel: '\\textstyle \\begin{bmatrix}\\square & \\square\\\\ \\square & \\square\\end{bmatrix}  \\,  \\begin{cases} #? \\\\ #? \\end{cases}', isMatrix: true,
+    label: 'bmatrix', fontSize: '5px', mathLabel: '\\textstyle \\begin{bmatrix}#? & #?\\\\ #? & #?\\end{bmatrix}  \\,  \\begin{cases} #? \\\\ #? \\end{cases}', isMatrix: true,
     items: [
 
       { type: 'sep', cols: 2, cls: 'cme-matrix-subgroup' },
@@ -992,7 +992,7 @@ const MATH_GROUPS = [
       { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
 
       { type: 'sep', cols: 3, cls: 'cme-matrix-subgroup' },
-      { label: '□', insert: '\\begin{matrix} \\square \\\\ \\square \\\\ \\square \\end{matrix}', cls: 'template', directInsert: true, title: '3x1 Matrix' },
+      { label: '□', insert: '\\begin{matrix} #? \\\\ #? \\\\ #? \\end{matrix}', cls: 'template', directInsert: true, title: '3x1 Matrix' },
       { label: '[□ \\ □]', insert: '\\begin{bmatrix} #? \\\\ #? \\end{bmatrix}', cls: 'template', directInsert: true, title: '2x1 Bracket matrix' },
       { label: '(□ \\ □)', insert: '\\begin{pmatrix} #? \\\\ #? \\end{pmatrix}', cls: 'template', directInsert: true, title: '2x1 Parenthesis matrix' },
       { label: '□ □ □', insert: '\\begin{matrix} #? \\,  #? \\,  #? \\end{matrix}', cls: 'template', directInsert: true, title: '1x3 Matrix' },
@@ -1659,11 +1659,11 @@ const MATH_GROUPS = [
 ];
 
 const CHEM_GROUPS = [
- 
+
   {
     label: 'H₂O', isChem: true,
     items: [
-     {
+      {
         type: 'sep', cols: 2, small: true, cls: 'cme-trig-subgroup', moreCols: 18, moreItems: [
           // Row 1
           { label: 'H', insert: '\\mathrm{H}', title: 'Hydrogen', cls: 'pt-unknown' },
@@ -1821,21 +1821,104 @@ const CHEM_GROUPS = [
       { label: 'F', insert: '\\mathrm{F}', title: 'Fluorine' },   // Fluorine
       { label: 'S', insert: '\\mathrm{S}', title: 'Sulfur' },   // Sulfur
 
-       {type: 'sep', cols: 1, small: true, cls: 'cme-trig-subgroup'},
+      { type: 'sep', cols: 1, small: true, cls: 'cme-trig-subgroup' },
 
-       { label: '°', insert: '^\\circ', title: 'Degree' },
-       { label: 'Δ', insert: '\\Delta', title: 'Increment / Delta' },
-       { label: 'mol', insert: '\\mathrm{mol}', title: 'Mole' },
+      { label: '°', insert: '^\\circ', title: 'Degree' },
+      { label: 'Δ', insert: '\\Delta', title: 'Increment / Delta' },
+      { label: 'mol', insert: '\\mathrm{mol}', title: 'Mole' },
 
-        {type: 'sep', cols: 1, small: true, cls: 'cme-trig-subgroup'},
+      { type: 'sep', cols: 1, small: true, cls: 'cme-trig-subgroup' },
 
-       { label: '-', insert: '-', title: 'Single bond' },
-       { label: '=', insert: '=', title: 'Double bond' },
-       { label: '≡', insert: '\\equiv', title: 'Triple bond' },
+      { label: '-', insert: '-', title: 'Single bond' },
+      { label: '=', insert: '=', title: 'Double bond' },
+      { label: '≡', insert: '\\equiv', title: 'Triple bond' },
+
+      { type: 'sep', cols: 3, small: true, cls: 'cme-trig-subgroup' ,moreCols: 3, moreItems: [
+        { label: '→', insert: '\\underset{#?}{\\overset{#?}{\\rightarrow}}', cls: 'template', title: 'Right arrow with overscript and underscript' },
+        { label: '⇌', insert: '\\overset{#?}{\\rightleftharpoons}', cls: 'template', title: 'Equilibrium with overscript' },
+        { label: '⇄', insert: '\\underset{#?}{\\rightleftarrows}', cls: 'template', title: 'Right left arrows with underscript' },
+      ]},
+      { label: '→', insert: '\\rightarrow', title: 'Right arrow' },
+      { label: '→̅', insert: '\\overset{#?}{\\rightarrow}', isWidget: true, title: 'Right arrow with overscript' },
+      { label: '→̲', insert: '\\underset{#?}{\\rightarrow}', isWidget: true, title: 'Right arrow with underscript' },
+      { label: '⇌', insert: '\\rightleftharpoons', cls: 'template', title: 'Equilibrium' },
+       { label: '⇌', insert: '\\overset{#?}{\\rightleftharpoons}', isWidget:true,title: 'Equilibrium with overscript' },
+       { label: '⇌', insert: '\\underset{#?}{\\rightleftharpoons}',isWidget:true, title: 'Equilibrium with underscript' },
+       { label: '⇄', insert: '\\rightleftarrows',isWidget:true, title: 'Right left arrows' },
+       { label: '⇄', insert: '\\overset{#?}{\\rightleftarrows}',isWidget:true, title: 'Right left arrows with overscript' },
+       { label: '⇄', insert: '\\underset{#?}{\\rightleftarrows}',isWidget:true, title: 'Right left arrows with underscript' },
+    
+        { type: 'sep', cols: 2, small: true, cls: 'cme-matrix-subgroup' },
+        
+      // Superscript and subscript
+      { label: 'xⁿₖ', insert: '{#?}_{#?}^{#?}', isWidget: true, title: 'Subscript and superscript' },
+
+         // Superscript
+      { label: 'xⁿ', insert: '{#?}^{#?}', isWidget: true, title: 'Superscript' },
+
+     
+      // Left subscript and superscript
+      { label: 'ⁿₖx', insert: '{}_{#?}^{#?}{#?}', isWidget:true, title: 'Left subscript and superscript' },
+
+
+      // Subscript
+      { label: 'xₖ', insert: '{#?}_{#?}',isWidget: true, title: 'Subscript' },
+
+       
+      {type: 'sep', cols: 1, small: true},
+
+              // Parentheses
+      { label: '', insert: '\\left( #? \\right)', title: 'Parentheses',isWidget:true },
+        
+      // Square brackets
+      { label: '[ ]', insert: '\\left[ #? \\right]', title: 'Square brackets',isWidget:true },
+
+       // Curly brackets
+      { label: '{ }', insert: '\\left\\{ #? \\right\\}', title: 'Curly brackets',isWidget:true },
+        
+        { type: 'sep', cols: 1 },
+      // 6. Undo / Redo (1 col)
+      { label: '↶', action: 'UNDO', title: 'Undo' },
+      { label: '↷', action: 'REDO', title: 'Redo' },
+
+      { type: 'sep', cols: 2 },
+      // 7. Formatting Group (2 cols)
+      { label: <FontAwesomeIcon icon={faBold} />, action: 'BOLD', cls: 'template', title: 'Bold' },
+      { label: <FontAwesomeIcon icon={faItalic} />, action: 'ITALIC', cls: 'template', title: 'Italic' },
+      {
+        label: (
+          <img
+            src={OmegaIcon}
+            alt="Omega"
+            width="18"
+            height="18"
+            style={{ display: 'block' }}
+          />
+        ), title: 'Insert Special Character', action: 'SPECIAL_CHARS'
+      },
+
+      {
+        label: (
+          <img
+            src={PaletteIcon}
+            alt="Palette"
+            width="18"
+            height="18"
+            style={{ display: 'block' }}
+          />
+        ), action: 'TEXT_COLOR', title: 'Text Color'
+      },
+
+
+
+      { type: 'sep', cols: 1 },
+      // 9. Font Controls (1 col)
+      { type: 'dropdown', label: 'Font...' },
+      { type: 'dropdown', label: 'Size' }
 
     ]
   },
- {
+  {
     label: '∈ ∞', items: [
 
       // Group 1 – Cancel (1 col × 1 row)
@@ -2565,7 +2648,7 @@ const CHEM_GROUPS = [
   },
 
   {
-    label: 'bmatrix', fontSize: '5px', mathLabel: '\\textstyle \\begin{bmatrix}\\square & \\square\\\\ \\square & \\square\\end{bmatrix}  \\,  \\begin{cases} #? \\\\ #? \\end{cases}', isMatrix: true,
+    label: 'bmatrix', fontSize: '5px', mathLabel: '\\textstyle \\begin{bmatrix}#? & #?\\\\ #? & #?\\end{bmatrix}  \\,  \\begin{cases} #? \\\\ #? \\end{cases}', isMatrix: true,
     items: [
 
       { type: 'sep', cols: 2, cls: 'cme-matrix-subgroup' },
@@ -2575,7 +2658,7 @@ const CHEM_GROUPS = [
       { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
 
       { type: 'sep', cols: 3, cls: 'cme-matrix-subgroup' },
-      { label: '□', insert: '\\begin{matrix} \\square \\\\ \\square \\\\ \\square \\end{matrix}', cls: 'template', directInsert: true, title: '3x1 Matrix' },
+      { label: '□', insert: '\\begin{matrix} #? \\\\ #? \\\\ #? \\end{matrix}', cls: 'template', directInsert: true, title: '3x1 Matrix' },
       { label: '[□ \\ □]', insert: '\\begin{bmatrix} #? \\\\ #? \\end{bmatrix}', cls: 'template', directInsert: true, title: '2x1 Bracket matrix' },
       { label: '(□ \\ □)', insert: '\\begin{pmatrix} #? \\\\ #? \\end{pmatrix}', cls: 'template', directInsert: true, title: '2x1 Parenthesis matrix' },
       { label: '□ □ □', insert: '\\begin{matrix} #? \\,  #? \\,  #? \\end{matrix}', cls: 'template', directInsert: true, title: '1x3 Matrix' },
@@ -4064,7 +4147,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                         <button
                           type="button"
                           className={`cme-btn template${item.cls ? ` ${item.cls}` : ''}${currentGroup.isMatrix ? ' cme-matrix-btn-small' : ''}`}
-                          title={item.insert}
+                          title={item.title || item.label || item.insert}
                           onMouseDown={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -4240,7 +4323,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                 setMorePopup(null);
               }}
             >
-              {morePopup.isTemplate && item.insert && !item.action && item.isWidget ? (
+              {item.insert && !item.action && (item.cls === 'template' || item.isWidget) ? (
                 <math-field
                   read-only
                   style={{

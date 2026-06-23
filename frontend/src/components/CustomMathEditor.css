@@ -260,16 +260,15 @@
 }
 
 
-.cme-matrix-subgroup {
-  row-gap: 2px;
-}
+
 
 .cme-matrix-subgroup .cme-btn {
-  min-width: 12px;
+  
+  max-width: 42px;
   height: 40px;
 
   font-weight: bold;
-  font-size: 15px !important;
+  font-size: 12px !important;
 }
 
 .cme-matrix-subgroup .cme-btn:hover {
@@ -282,7 +281,7 @@
   min-width: 12px;
   height: 40px;
   font-weight: bold;
-  font-size: 15px !important;
+  font-size: 12px !important;
 }
 
 .cme-more-popup-btn.cme-matrix-subgroup math-field {
@@ -757,7 +756,11 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 /* ── Matrix Hover popover ────────────────────────────────── */
 .cme-matrix-btn-wrapper {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 .cme-matrix-hover-popover {
