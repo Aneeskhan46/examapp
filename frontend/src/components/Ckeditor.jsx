@@ -1646,8 +1646,8 @@ const MATH_GROUPS = [
 
     items: [
 
-      {type: 'sep', cols: 2, cls: 'cme-trig-subgroup'}
-       
+      { type: 'sep', cols: 2, cls: 'cme-trig-subgroup' }
+
 
     ]
   },
@@ -1833,50 +1833,52 @@ const CHEM_GROUPS = [
       { label: '=', insert: '=', title: 'Double bond' },
       { label: '≡', insert: '\\equiv', title: 'Triple bond' },
 
-      { type: 'sep', cols: 3, small: true, cls: 'cme-trig-subgroup' ,moreCols: 3, moreItems: [
-        { label: '→', insert: '\\underset{#?}{\\overset{#?}{\\rightarrow}}', cls: 'template', title: 'Right arrow with overscript and underscript' },
-        { label: '⇌', insert: '\\overset{#?}{\\rightleftharpoons}', cls: 'template', title: 'Equilibrium with overscript' },
-        { label: '⇄', insert: '\\underset{#?}{\\rightleftarrows}', cls: 'template', title: 'Right left arrows with underscript' },
-      ]},
+      {
+        type: 'sep', cols: 3, small: true, cls: 'cme-trig-subgroup', moreCols: 3, moreItems: [
+          { label: '→', insert: '\\underset{#?}{\\overset{#?}{\\rightarrow}}', cls: 'template', title: 'Right arrow with overscript and underscript' },
+          { label: '⇌', insert: '\\overset{#?}{\\rightleftharpoons}', cls: 'template', title: 'Equilibrium with overscript' },
+          { label: '⇄', insert: '\\underset{#?}{\\rightleftarrows}', cls: 'template', title: 'Right left arrows with underscript' },
+        ]
+      },
       { label: '→', insert: '\\rightarrow', title: 'Right arrow' },
       { label: '→̅', insert: '\\overset{#?}{\\rightarrow}', isWidget: true, title: 'Right arrow with overscript' },
       { label: '→̲', insert: '\\underset{#?}{\\rightarrow}', isWidget: true, title: 'Right arrow with underscript' },
       { label: '⇌', insert: '\\rightleftharpoons', cls: 'template', title: 'Equilibrium' },
-       { label: '⇌', insert: '\\overset{#?}{\\rightleftharpoons}', isWidget:true,title: 'Equilibrium with overscript' },
-       { label: '⇌', insert: '\\underset{#?}{\\rightleftharpoons}',isWidget:true, title: 'Equilibrium with underscript' },
-       { label: '⇄', insert: '\\rightleftarrows',isWidget:true, title: 'Right left arrows' },
-       { label: '⇄', insert: '\\overset{#?}{\\rightleftarrows}',isWidget:true, title: 'Right left arrows with overscript' },
-       { label: '⇄', insert: '\\underset{#?}{\\rightleftarrows}',isWidget:true, title: 'Right left arrows with underscript' },
-    
-        { type: 'sep', cols: 2, small: true, cls: 'cme-matrix-subgroup' },
-        
+      { label: '⇌', insert: '\\overset{#?}{\\rightleftharpoons}', isWidget: true, title: 'Equilibrium with overscript' },
+      { label: '⇌', insert: '\\underset{#?}{\\rightleftharpoons}', isWidget: true, title: 'Equilibrium with underscript' },
+      { label: '⇄', insert: '\\rightleftarrows', isWidget: true, title: 'Right left arrows' },
+      { label: '⇄', insert: '\\overset{#?}{\\rightleftarrows}', isWidget: true, title: 'Right left arrows with overscript' },
+      { label: '⇄', insert: '\\underset{#?}{\\rightleftarrows}', isWidget: true, title: 'Right left arrows with underscript' },
+
+      { type: 'sep', cols: 2, small: true, cls: 'cme-matrix-subgroup' },
+
       // Superscript and subscript
       { label: 'xⁿₖ', insert: '{#?}_{#?}^{#?}', isWidget: true, title: 'Subscript and superscript' },
 
-         // Superscript
+      // Superscript
       { label: 'xⁿ', insert: '{#?}^{#?}', isWidget: true, title: 'Superscript' },
 
-     
+
       // Left subscript and superscript
-      { label: 'ⁿₖx', insert: '{}_{#?}^{#?}{#?}', isWidget:true, title: 'Left subscript and superscript' },
+      { label: 'ⁿₖx', insert: '{}_{#?}^{#?}{#?}', isWidget: true, title: 'Left subscript and superscript' },
 
 
       // Subscript
-      { label: 'xₖ', insert: '{#?}_{#?}',isWidget: true, title: 'Subscript' },
+      { label: 'xₖ', insert: '{#?}_{#?}', isWidget: true, title: 'Subscript' },
 
-       
-      {type: 'sep', cols: 1, small: true},
 
-              // Parentheses
-      { label: '', insert: '\\left( #? \\right)', title: 'Parentheses',isWidget:true },
-        
+      { type: 'sep', cols: 1, small: true },
+
+      // Parentheses
+      { label: '', insert: '\\left( #? \\right)', title: 'Parentheses', isWidget: true },
+
       // Square brackets
-      { label: '[ ]', insert: '\\left[ #? \\right]', title: 'Square brackets',isWidget:true },
+      { label: '[ ]', insert: '\\left[ #? \\right]', title: 'Square brackets', isWidget: true },
 
-       // Curly brackets
-      { label: '{ }', insert: '\\left\\{ #? \\right\\}', title: 'Curly brackets',isWidget:true },
-        
-        { type: 'sep', cols: 1 },
+      // Curly brackets
+      { label: '{ }', insert: '\\left\\{ #? \\right\\}', title: 'Curly brackets', isWidget: true },
+
+      { type: 'sep', cols: 1 },
       // 6. Undo / Redo (1 col)
       { label: '↶', action: 'UNDO', title: 'Undo' },
       { label: '↷', action: 'REDO', title: 'Redo' },

@@ -94,7 +94,7 @@
   font-weight: bold;
   color: #ffffff;
   cursor: pointer;
-  transition: all 0.12s;
+  /* transition: all 0.12s; */
   white-space: nowrap;
   position: relative;
   z-index: 1;
@@ -131,7 +131,7 @@
   font-size: 11px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.12s;
+  /* transition: all 0.12s; */
   white-space: nowrap;
   margin-bottom: -2px;
   position: relative;
