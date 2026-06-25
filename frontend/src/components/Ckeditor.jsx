@@ -162,32 +162,26 @@ const MATH_GROUPS = [
     mathLabel: '\\sqrt{\\square} \\, \\frac{#0}{#?}',
     items: [
       // 1. Root & Fraction Group (3 cols)
-     {label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="18" y="2" width="18" height="20" rx="2"/><line x1="10" y1="32" x2="54" y2="32" stroke="#222" strokeWidth="4" strokeLinecap="round"/><rect x="18" y="40" width="18" height="20" rx="2"/></svg>), insert: '\\frac{#0}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Fraction'},
-     { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M6 34 L14 34 L20 50 L30 10 L54 10" stroke="#222" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/><rect x="36" y="18" width="16" height="20" rx="2"/></svg>), insert: '\\sqrt{#0}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Square Root' },
-{ label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="10" y="21" width="12" height="22" rx="2"/><line x1="30" y1="50" x2="46" y2="14" stroke="#222" strokeWidth="4" strokeLinecap="round"/><rect x="44" y="21" width="12" height="22" rx="2"/></svg>), insert: '\\nicefrac{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Bevelled Fraction' },
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M6 36 L14 36 L20 50 L30 10 L56 10" stroke="#222" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/><rect x="12" y="16" width="8" height="12" rx="2"/><rect x="40" y="22" width="12" height="22" rx="2"/></svg>), insert: '\\sqrt[#?]{#0}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Nth Root Fraction' },
-     
+      { label: '□/□', insert: '\\frac{#0}{#?}', title: 'Fraction' },
+      { label: '√', insert: '\\sqrt{#0}', title: 'Square Root' },
+      { label: '⎸/⎹', insert: '\\nicefrac{#?}{#?}', title: 'Nicefrac' },
+      { label: 'ⁿ√', insert: '\\sqrt[#?]{#0}', title: 'Nth Root' },
 
 
 
       { type: 'sep', cols: 1 },
       // 8. Text Style Group (1 col)
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="10" y="22" width="12" height="22" rx="2"/><rect x="28" y="10" width="12" height="22" rx="2" opacity="0.45"/></svg>), insert: '#0^{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Superscript' },
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="10" y="10" width="12" height="22" rx="2"/><rect x="28" y="28" width="12" height="22" rx="2" opacity="0.45"/></svg>), insert: '#0_{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Subscript' },
-     
+      { label: 'T¹', insert: '#0^{#?}', title: 'Superscript' },
+      { label: 'T₁', insert: '#0_{#?}', title: 'Subscript' },
 
 
 
       { type: 'sep', cols: 2 },
       // 2. Brackets & Delimiters Group (2 cols)
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 12 Q8 32 18 52" stroke="#222" strokeWidth="4" fill="none"/><rect x="26" y="18" width="12" height="22" rx="2"/><path d="M46 12 Q56 32 46 52" stroke="#222" strokeWidth="4" fill="none"/></svg>), insert: '\\left(#0\\right)', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Parentheses' },
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 12H12V52H18" stroke="#222" strokeWidth="4" fill="none"/><rect x="26" y="18" width="12" height="22" rx="2"/><path d="M46 12H52V52H46" stroke="#222" strokeWidth="4" fill="none"/></svg>), insert: '\\left[#0\\right]', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Square Brackets' },
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="16" y1="12" x2="16" y2="52" stroke="#222" strokeWidth="4"/><rect x="26" y="18" width="12" height="22" rx="2"/><line x1="48" y1="12" x2="48" y2="52" stroke="#222" strokeWidth="4"/></svg>), insert: '\\left|#0\\right|', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Absolute Value' },
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 12C12 12 12 22 16 26C12 30 12 34 16 38C12 42 12 52 18 52" stroke="#222" strokeWidth="4" fill="none"/><rect x="26" y="18" width="12" height="22" rx="2"/><path d="M46 12C52 12 52 22 48 26C52 30 52 34 48 38C52 42 52 52 46 52" stroke="#222" strokeWidth="4" fill="none"/></svg>), insert: '\\left\\{#0\\right\\}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Curly Braces' },
-      // { label: '(□)', insert: '\\left(#0\\right)', title: 'Parentheses' },
-      // { label: '[□]', insert: '\\left[#0\\right]', title: 'Square Brackets' },
-      // { label: '|□|', insert: '\\left|#0\\right|', title: 'Absolute Value' },
-      // { label: '{□}', insert: '\\left\\{#0\\right\\}', title: 'Curly Braces' },
+      { label: '(□)', insert: '\\left(#0\\right)', title: 'Parentheses' },
+      { label: '[□]', insert: '\\left[#0\\right]', title: 'Square Brackets' },
+      { label: '|□|', insert: '\\left|#0\\right|', title: 'Absolute Value' },
+      { label: '{□}', insert: '\\left\\{#0\\right\\}', title: 'Curly Braces' },
 
 
       { type: 'sep', cols: 2, small: true },
@@ -1871,8 +1865,7 @@ const CHEM_GROUPS = [
         ]
       },
       { label: '→', insert: '\\rightarrow', title: 'Right arrow' },
-     { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="24" y="10" width="8" height="14" rx="1"/><line x1="8" y1="40" x2="44" y2="40" stroke="#222" strokeWidth="4" strokeLinecap="round"/><path d="M40 30L54 40L40 50V42H32V38H40V30Z" fill="#222" stroke="none"/></svg>), insert: '\\overset{#?}{\\rightarrow}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Right Arrow with Label' },
-      // { label: '→̅', insert: '\\overset{#?}{\\rightarrow}', isWidget: true, title: 'Right arrow with overscript' },
+      { label: '→̅', insert: '\\overset{#?}{\\rightarrow}', isWidget: true, title: 'Right arrow with overscript' },
       { label: '→̲', insert: '\\underset{#?}{\\rightarrow}', isWidget: true, title: 'Right arrow with underscript' },
       { label: '⇌', insert: '\\rightleftharpoons', cls: 'template', title: 'Equilibrium' },
       { label: '⇌', insert: '\\overset{#?}{\\rightleftharpoons}', isWidget: true, title: 'Equilibrium with overscript' },
