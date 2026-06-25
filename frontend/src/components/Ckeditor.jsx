@@ -3879,33 +3879,6 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
       if (e.key === ' ') {
         e.preventDefault();
         mf.executeCommand(['insert', '\\, ']);
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        mf.executeCommand(['insert', '\\\\']);
-        // Re-apply active styles on new line
-        setTimeout(() => {
-          if (typeof mf.applyStyle === 'function') {
-            if (activeStyles.bold) {
-              mf.applyStyle({
-                variantStyle: 'bold',
-                fontSeries: 'b'
-              });
-            }
-            if (activeStyles.color !== 'none') {
-              mf.applyStyle({ color: activeStyles.color });
-            }
-            if (activeStyles.fontFamily !== 'none') {
-              mf.applyStyle({ fontFamily: activeStyles.fontFamily });
-            }
-            if (activeStyles.fontSize !== 'auto') {
-              mf.applyStyle({
-                fontSize: parseInt(activeStyles.fontSize, 10),
-                size: parseInt(activeStyles.fontSize, 10)
-              });
-            }
-            updateActiveStyles();
-          }
-        }, 10);
       }
     };
 

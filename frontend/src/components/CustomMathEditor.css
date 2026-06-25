@@ -412,7 +412,7 @@
   border-radius: 4px;
   margin: 1px 12px;
   flex: 1;
-  min-height: 130px;
+  min-height: 140px;
   overflow: auto;
   display: block;
   box-sizing: border-box;
@@ -575,7 +575,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   bottom: 24px;
   right: 24px;
   width: 620px;
-  height: 340px;
+  height: 380px;
   background: #f4f7f9;
   border: 1px solid #99b1c1;
   border-radius: 6px;
