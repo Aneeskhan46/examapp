@@ -90,11 +90,11 @@ export function initMathFieldCursorFix() {
     }
   });
 
-  _observer.observe(document.body, { 
-    childList: true, 
-    subtree: true, 
-    attributes: true, 
-    attributeFilter: ['read-only', 'readonly'] 
+  _observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['read-only', 'readonly']
   });
 }
 

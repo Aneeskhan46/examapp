@@ -1010,10 +1010,10 @@ const MATH_GROUPS = [
 
       { type: 'sep', cols: 2, cls: 'cme-matrix-subgroup' },
       { label: '□', insert: 'matrix', cls: 'template', title: 'Matrix' },
-       { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
+      { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
       { label: '[□]', insert: 'bmatrix', cls: 'template', title: 'Bracket matrix' },
       { label: '(□)', insert: 'pmatrix', cls: 'template', title: 'Parenthesis matrix' },
-     
+
 
       { type: 'sep', cols: 3, cls: 'cme-matrix-subgroup' },
       { label: '□', insert: '\\begin{matrix} #? \\\\ #? \\\\ #? \\end{matrix}', cls: 'template', directInsert: true, title: 'Begin matrix' },
@@ -2682,7 +2682,7 @@ const CHEM_GROUPS = [
       { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
       { label: '[□]', insert: 'bmatrix', cls: 'template', title: 'Bracket matrix' },
       { label: '(□)', insert: 'pmatrix', cls: 'template', title: 'Parenthesis matrix' },
-    
+
       { type: 'sep', cols: 3, cls: 'cme-matrix-subgroup' },
       { label: '□', insert: '\\begin{matrix} #? \\\\ #? \\\\ #? \\end{matrix}', cls: 'template', directInsert: true, title: 'Begin matrix' },
       { label: '[□ \\ □]', insert: '\\begin{bmatrix} #? \\\\ #? \\end{bmatrix}', cls: 'template', directInsert: true, title: 'Begin bmatrix' },
@@ -3759,7 +3759,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
         mf.queryStyle({ variantStyle: 'bold' }) === 'all'
       );
 
-      const italic = (
+      const mlItalic = (
         mf.queryStyle({ variantStyle: 'italic' }) === 'all' ||
         mf.queryStyle({ shape: 'it' }) === 'all'
       );
@@ -3781,13 +3781,13 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
         (c) => mf.queryStyle({ color: c }) === 'all'
       ) || 'none';
 
-      setActiveStyles({
-        bold,
-        italic,
+      setActiveStyles(prev => ({
+        bold: prev.bold,
+        italic: prev.italic,
         fontFamily: currentFont,
         fontSize: String(currentSize),
         color: currentColor,
-      });
+      }));
     } catch (e) {
       console.warn("Failed to query active styles:", e);
     }
@@ -3840,6 +3840,10 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
 
     // Pre-fill with existing value when editing
     const prefill = () => {
+      if (typeof mf.applyStyle === 'function') {
+        // Force upright text by default instead of MathLive's default math-italic
+        mf.applyStyle({ variantStyle: 'up' });
+      }
       if (initialLatex) {
         // For chem, unwrap \ce{...} so user edits raw content
         let valueToSet = initialLatex;
@@ -3864,26 +3868,62 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
     const mf = popupMfRef.current;
     if (!mf) return;
     const handleKeyDown = (e) => {
-      // When italic is active, intercept printable characters and insert them
-      // wrapped in \textit{} so they visually render as italic.
-      if (
-        activeStyles.italic &&
-        e.key.length === 1 &&
-        !e.ctrlKey && !e.metaKey && !e.altKey
-      ) {
-        e.preventDefault();
-        mf.executeCommand(['insert', `\\textit{${e.key}}`]);
-        return;
+      // Forcefully apply bold/italic states via explicit LaTeX wrappers to bypass MathLive's buggy future-style insertion on empty lines
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (/[a-zA-Z0-9]/.test(e.key)) {
+          e.preventDefault();
+          e.stopPropagation();
+          let latex = e.key;
+          if (activeStyles.bold && activeStyles.italic) {
+            latex = `\\mathbfit{${e.key}}`;
+          } else if (activeStyles.bold) {
+            latex = `\\mathbf{${e.key}}`;
+          } else if (activeStyles.italic) {
+            latex = `\\mathit{${e.key}}`;
+          } else {
+            // Neither active: force upright text
+            latex = `\\mathrm{${e.key}}`;
+          }
+          mf.executeCommand(['insert', latex]);
+          return;
+        }
       }
 
       if (e.key === ' ') {
         e.preventDefault();
         mf.executeCommand(['insert', '\\, ']);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        // Use MathLive's native row command for a single clean line break
+        mf.executeCommand('addRowAfter');
+        // Re-apply active styles on new line
+        setTimeout(() => {
+          if (typeof mf.applyStyle === 'function') {
+            mf.applyStyle({
+              fontSeries: activeStyles.bold ? 'b' : 'auto',
+              variantStyle: activeStyles.italic ? 'italic' : 'up'
+            });
+            if (activeStyles.color !== 'none') {
+              mf.applyStyle({ color: activeStyles.color });
+            }
+            if (activeStyles.fontFamily !== 'none') {
+              mf.applyStyle({ fontFamily: activeStyles.fontFamily });
+            }
+            if (activeStyles.fontSize !== 'auto') {
+              mf.applyStyle({
+                fontSize: parseInt(activeStyles.fontSize, 10),
+                size: parseInt(activeStyles.fontSize, 10)
+              });
+            }
+            updateActiveStyles();
+          }
+        }, 10);
       }
     };
 
-    mf.addEventListener('keydown', handleKeyDown);
-    return () => mf.removeEventListener('keydown', handleKeyDown);
+    mf.addEventListener('keydown', handleKeyDown, true);
+    return () => mf.removeEventListener('keydown', handleKeyDown, true);
   }, [mode, activeStyles, updateActiveStyles]);
 
 
@@ -4209,21 +4249,22 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                         } else if (item.action === 'BOLD') {
                           if (mf && typeof mf.applyStyle === 'function') {
                             mf.focus();
+                            const newBold = !activeStyles.bold;
                             mf.applyStyle({
-                              variantStyle: activeStyles.bold ? '' : 'bold',
-                              fontSeries: activeStyles.bold ? 'auto' : 'b'
+                              fontSeries: newBold ? 'b' : 'auto',
+                              variantStyle: activeStyles.italic ? 'italic' : 'up'
                             });
-                            updateActiveStyles();
+                            setActiveStyles(prev => ({ ...prev, bold: newBold }));
                           }
                         } else if (item.action === 'ITALIC') {
                           if (mf && typeof mf.applyStyle === 'function') {
                             mf.focus();
-                            // Toggle italic: in MathLive variantStyle 'italic' applies italic,
-                            // '' (empty string) resets to default upright
+                            const newItalic = !activeStyles.italic;
                             mf.applyStyle({
-                              variantStyle: activeStyles.italic ? '' : 'italic',
+                              fontSeries: activeStyles.bold ? 'b' : 'auto',
+                              variantStyle: newItalic ? 'italic' : 'up',
                             });
-                            updateActiveStyles();
+                            setActiveStyles(prev => ({ ...prev, italic: newItalic }));
                           }
                         } else if (item.action === 'UNDO') {
                           popupMfRef.current?.executeCommand('undo');
