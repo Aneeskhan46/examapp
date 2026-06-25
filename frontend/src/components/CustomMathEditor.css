@@ -572,7 +572,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 /* ── Math Editor Popup (Wiris Fixed Bottom-Right Style) ──── */
 .cme-editor-popup {
   position: fixed;
-  bottom: 24px;
+  bottom: 55px;
   right: 24px;
   width: 620px;
   height: 300px;
