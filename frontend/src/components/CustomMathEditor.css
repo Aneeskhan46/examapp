@@ -575,7 +575,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   bottom: 24px;
   right: 24px;
   width: 620px;
-  height: 380px;
+  height: 300px;
   background: #f4f7f9;
   border: 1px solid #99b1c1;
   border-radius: 6px;
