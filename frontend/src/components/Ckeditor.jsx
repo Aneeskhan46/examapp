@@ -987,9 +987,10 @@ const MATH_GROUPS = [
 
       { type: 'sep', cols: 2, cls: 'cme-matrix-subgroup' },
       { label: '□', insert: 'matrix', cls: 'template', title: 'Matrix' },
+       { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
       { label: '[□]', insert: 'bmatrix', cls: 'template', title: 'Bracket matrix' },
       { label: '(□)', insert: 'pmatrix', cls: 'template', title: 'Parenthesis matrix' },
-      { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
+     
 
       { type: 'sep', cols: 3, cls: 'cme-matrix-subgroup' },
       { label: '□', insert: '\\begin{matrix} #? \\\\ #? \\\\ #? \\end{matrix}', cls: 'template', directInsert: true, title: 'Begin matrix' },
@@ -2655,10 +2656,10 @@ const CHEM_GROUPS = [
 
       { type: 'sep', cols: 2, cls: 'cme-matrix-subgroup' },
       { label: '□', insert: 'matrix', cls: 'template', title: 'Matrix' },
+      { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
       { label: '[□]', insert: 'bmatrix', cls: 'template', title: 'Bracket matrix' },
       { label: '(□)', insert: 'pmatrix', cls: 'template', title: 'Parenthesis matrix' },
-      { label: '|□|', insert: 'vmatrix', cls: 'template', title: 'Vertical bar matrix' },
-
+    
       { type: 'sep', cols: 3, cls: 'cme-matrix-subgroup' },
       { label: '□', insert: '\\begin{matrix} #? \\\\ #? \\\\ #? \\end{matrix}', cls: 'template', directInsert: true, title: 'Begin matrix' },
       { label: '[□ \\ □]', insert: '\\begin{bmatrix} #? \\\\ #? \\end{bmatrix}', cls: 'template', directInsert: true, title: 'Begin bmatrix' },

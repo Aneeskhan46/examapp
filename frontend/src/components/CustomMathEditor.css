@@ -154,7 +154,8 @@
   align-items: stretch;
   gap: 0;
   position: relative;
-  left: 5px; /* moves 50px to the right */
+  left: 5px;
+  /* moves 50px to the right */
   overflow-x: auto;
   overflow-y: hidden;
   width: calc(100% - 27px);
@@ -265,7 +266,7 @@
 
 
 .cme-matrix-subgroup .cme-btn {
-  
+
   max-width: 42px;
   height: 40px;
 
@@ -604,7 +605,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   align-items: center;
   justify-content: space-between;
   padding: 6px 12px;
-  background: #778e9a;
+  background: #778E9A;
   /* Steel-blue / Slate-blue */
   color: #ffffff;
   font-weight: 500;
