@@ -1648,33 +1648,33 @@ const MATH_GROUPS = [
 
     ]
   },
-  {
-    label: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 64 64"
-        width="20"
-        height="20"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        style={{ verticalAlign: 'middle' }}
-      >
-        <path d="M32 12 L24 24 H40 Z" fill="currentColor" />
-        <path d="M16 36 C16 48, 48 48, 48 36" />
-        <path d="M22 36 C22 43, 42 43, 42 36" />
-      </svg>
-    ),
+  // {
+  //   label: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       viewBox="0 0 64 64"
+  //       width="20"
+  //       height="20"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth="3"
+  //       strokeLinecap="round"
+  //       strokeLinejoin="round"
+  //       style={{ verticalAlign: 'middle' }}
+  //     >
+  //       <path d="M32 12 L24 24 H40 Z" fill="currentColor" />
+  //       <path d="M16 36 C16 48, 48 48, 48 36" />
+  //       <path d="M22 36 C22 43, 42 43, 42 36" />
+  //     </svg>
+  //   ),
 
-    items: [
+  //   items: [
 
-      { type: 'sep', cols: 2, cls: 'cme-trig-subgroup' }
+  //     { type: 'sep', cols: 2, cls: 'cme-trig-subgroup' }
 
 
-    ]
-  },
+  //   ]
+  // },
 
 
 
@@ -3316,33 +3316,33 @@ const CHEM_GROUPS = [
 
     ]
   },
-  {
-    label: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 64 64"
-        width="20"
-        height="20"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        style={{ verticalAlign: 'middle' }}
-      >
-        <path d="M32 12 L24 24 H40 Z" fill="currentColor" />
-        <path d="M16 36 C16 48, 48 48, 48 36" />
-        <path d="M22 36 C22 43, 42 43, 42 36" />
-      </svg>
-    ),
+  // {
+  //   label: (
+  //     <svg
+  //       xmlns="http://www.w3.org/2000/svg"
+  //       viewBox="0 0 64 64"
+  //       width="20"
+  //       height="20"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth="3"
+  //       strokeLinecap="round"
+  //       strokeLinejoin="round"
+  //       style={{ verticalAlign: 'middle' }}
+  //     >
+  //       <path d="M32 12 L24 24 H40 Z" fill="currentColor" />
+  //       <path d="M16 36 C16 48, 48 48, 48 36" />
+  //       <path d="M22 36 C22 43, 42 43, 42 36" />
+  //     </svg>
+  //   ),
 
-    items: [
-
-
+  //   items: [
 
 
-    ]
-  },
+
+
+  //   ]
+  // },
 ];
 
 
@@ -4010,12 +4010,12 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
         <div className="cme-toolbar-groups">
           {groups.map((group, index) => {
             const isActive = activeGroup === index;
-            const isLastTab = index === groups.length - 1;
+            // const isLastTab = index === groups.length - 1;
             return (
               <button
                 key={group.isMatrix ? 'matrix-tab' : group.label}
                 className={`cme-group-tab${isActive ? ' active' : ''}`}
-                style={!isActive && isLastTab ? { backgroundColor: '#DC9E9E' } : {}}
+                // style={!isActive && isLastTab ? { backgroundColor: '#DC9E9E' } : {}}
                 type="button"
                 onMouseDown={(e) => {
                   e.preventDefault();

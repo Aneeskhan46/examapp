@@ -109,13 +109,13 @@
   color: #ffffff;
 }
 
-.cme-group-tab:last-child:not(.active) {
+/* .cme-group-tab:last-child:not(.active) {
   background: #DC9E9E;
 }
 
 .cme-group-tab:last-child:not(.active):hover {
   background: #95ae99;
-}
+} */
 
 .cme-group-tab.active {
 
