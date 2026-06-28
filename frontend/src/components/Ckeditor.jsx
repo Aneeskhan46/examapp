@@ -55,6 +55,48 @@ function findMathWidgetFromEventTarget(target) {
   return target instanceof Element ? target.closest?.('.ck-math-widget, [data-math-id]') : null;
 }
 
+/**
+ * Strip \text{...} wrappers while respecting nested braces.
+ * e.g. \text{\raisebox{-2.5px}{\,\,}} → \raisebox{-2.5px}{\,\,}
+ */
+function stripTextWrappers(latex) {
+  let result = '';
+  let i = 0;
+  const needle = '\\text{';
+  while (i < latex.length) {
+    const pos = latex.indexOf(needle, i);
+    if (pos === -1) {
+      result += latex.slice(i);
+      break;
+    }
+    result += latex.slice(i, pos);
+    // Find matching closing brace with balanced counting
+    let depth = 1;
+    let j = pos + needle.length;
+    while (j < latex.length && depth > 0) {
+      if (latex[j] === '{') depth++;
+      else if (latex[j] === '}') depth--;
+      j++;
+    }
+    // Extract inner content (between the opening { and matching })
+    result += latex.slice(pos + needle.length, j - 1);
+    i = j;
+  }
+  return result;
+}
+
+/**
+ * Strip MathLive's internally-added options from \enclose commands.
+ * MathLive serializes \enclose{circle}[shadow="none", solid currentColor]{...}
+ * but its own parser can't re-parse the [options] part, causing the entire 
+ * expression to be displayed as raw text.
+ * This strips: \enclose{type}[options]{content} → \enclose{type}{content}
+ */
+function stripEncloseOptions(latex) {
+  // Use non-greedy .*? to match everything inside [...] including backslashes
+  return latex.replace(/\\enclose\{([^}]*)\}\[.*?\]/g, '\\enclose{$1}');
+}
+
 function getLatexFromWidgetDom(widgetEl) {
   if (!widgetEl) return '';
 
@@ -2015,10 +2057,10 @@ const CHEM_GROUPS = [
 
 
       { type: 'sep', cols: 1, small: true },
-         
+
       //parenthesisi
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 12 Q8 32 18 52" stroke="#222" strokeWidth="4" fill="none" /><rect x="26" y="18" width="12" height="22" rx="2" /><path d="M46 12 Q56 32 46 52" stroke="#222" strokeWidth="4" fill="none" /></svg>), insert: '\\left(#0\\right)', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Parentheses' },
-     //square brackets 
+      //square brackets 
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 12H12V52H18" stroke="#222" strokeWidth="4" fill="none" /><rect x="26" y="18" width="12" height="22" rx="2" /><path d="M46 12H52V52H46" stroke="#222" strokeWidth="4" fill="none" /></svg>), insert: '\\left[#0\\right]', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Square Brackets' },
       // Curly brackets
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M20 12C16 12 16 18 18 22C19 24 19 26 16 29C19 32 19 34 18 36C16 40 16 46 20 52" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="26" y="18" width="12" height="22" rx="2" strokeWidth="4" /><path d="M44 12C48 12 48 18 46 22C45 24 45 26 48 29C45 32 45 34 46 36C48 40 48 46 44 52" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /></svg>), insert: '\\left\\{ #? \\right\\}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Curly brackets' },
@@ -3704,8 +3746,23 @@ class MathInlinePlugin extends Plugin {
             mf.style.pointerEvents = 'none';
 
             const setLatex = () => {
-              if (mf.setValue) mf.setValue(latex, { silenceNotifications: true });
-              else mf.value = latex;
+              // Strip empty placeholders for display in CKEditor so it shows a space instead of a box
+              // We use \quad to ensure the space is distinctly visible and not swallowed
+              // We also strip \text{} wrappers because inside text mode (like \raisebox) they render as literal strings
+              let displayLatex = stripEncloseOptions(
+                stripTextWrappers(
+                  latex.replace(/\\placeholder\{[^}]*\}/g, '\\quad ')
+                )
+              );
+                
+              // mhchem (\ce) ignores math padding like \, which causes \enclose circles to collapse and look small.
+              // If the widget contains \enclose and is wrapped in \ce{}, we unwrap it so it renders identically to the math editor.
+              if (displayLatex.includes('\\enclose') && /^\\ce\{[\s\S]*\}$/i.test(displayLatex.trim())) {
+                displayLatex = displayLatex.trim().replace(/^\\ce\{([\s\S]*)\}$/i, '$1');
+              }
+              
+              if (mf.setValue) mf.setValue(displayLatex, { silenceNotifications: true });
+              else mf.value = displayLatex;
             };
 
             if (customElements.get('math-field')) {
@@ -3756,10 +3813,22 @@ class MathInlinePlugin extends Plugin {
         const latex = modelElement.getAttribute('latex') || '';
         const span = writer.createContainerElement('span', {
           class: 'math-tex',
-          'data-latex': latex,
+          'data-latex': latex, // Keep raw latex in data-latex for restoring
           style: 'display:inline;',
         });
-        writer.insert(writer.createPositionAt(span, 0), writer.createText(latex));
+
+        // Strip placeholders and \text{} wrappers for the exported HTML so they render cleanly
+        let displayLatex = stripEncloseOptions(
+          stripTextWrappers(
+            latex.replace(/\\placeholder\{[^}]*\}/g, '\\quad ')
+          )
+        );
+          
+        if (displayLatex.includes('\\enclose') && /^\\ce\{[\s\S]*\}$/i.test(displayLatex.trim())) {
+          displayLatex = displayLatex.trim().replace(/^\\ce\{([\s\S]*)\}$/i, '$1');
+        }
+        
+        writer.insert(writer.createPositionAt(span, 0), writer.createText(displayLatex));
         return span;
       },
     });
@@ -4094,7 +4163,8 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   useEffect(() => {
     const mf = popupMfRef.current;
     if (!mf) return;
-    mf.defaultMode = mode === 'chem' ? 'text' : 'math';
+    // Always use math mode so LaTeX commands (like \enclose and \placeholder) parse correctly, even in chem tab
+    mf.defaultMode = 'math';
 
     // Pre-fill with existing value when editing
     const prefill = () => {
@@ -4106,11 +4176,23 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
         // For chem, unwrap \ce{...} so user edits raw content
         let valueToSet = initialLatex;
         if (mode === 'chem') {
-          const ceMatch = valueToSet.match(/^\\ce\{([\s\S]*)\}$/);
+          const ceMatch = valueToSet.match(/^\\ce\{([\s\S]*)\}$/i);
           if (ceMatch) valueToSet = ceMatch[1];
         }
-        if (mf.setValue) mf.setValue(valueToSet, { silenceNotifications: true });
-        else mf.value = valueToSet;
+        
+        // Strip \text{} wrappers because they render as literal strings inside text-mode environments (like \raisebox)
+        valueToSet = stripTextWrappers(valueToSet);
+        
+        // Strip MathLive's internal \enclose[options] that it can't re-parse
+        valueToSet = stripEncloseOptions(valueToSet);
+        
+        // Use executeCommand('insert') instead of setValue() because MathLive's setValue()
+        // uses a stricter parser that can't handle complex LaTeX (e.g. \enclose, \raisebox, \begin{array}).
+        // executeCommand('insert') uses the same parser path as when the user first inserts the template,
+        // which handles these commands correctly.
+        if (mf.setValue) mf.setValue('', { silenceNotifications: true });
+        else mf.value = '';
+        mf.executeCommand(['insert', valueToSet, { insertionMode: 'replaceAll' }]);
       }
       requestAnimationFrame(() => mf.focus());
     };
@@ -4129,6 +4211,10 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
       // Forcefully apply bold/italic states via explicit LaTeX wrappers to bypass MathLive's buggy future-style insertion on empty lines
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         if (/[a-zA-Z0-9]/.test(e.key)) {
+          if (!activeStyles.bold && !activeStyles.italic) {
+            // Neither active: let MathLive handle it natively
+            return;
+          }
           e.preventDefault();
           e.stopPropagation();
           let latex = e.key;
@@ -4138,9 +4224,6 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
             latex = `\\mathbf{${e.key}}`;
           } else if (activeStyles.italic) {
             latex = `\\mathit{${e.key}}`;
-          } else {
-            // Neither active: force upright text
-            latex = `\\mathrm{${e.key}}`;
           }
           mf.executeCommand(['insert', latex]);
           return;
@@ -4243,6 +4326,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
     if (!mf) return;
     let latex = mf.getValue ? mf.getValue() : mf.value;
     if (!latex || latex.trim() === '') { onClose(); return; }
+
     if (mode === 'chem') latex = serializeChemValue(latex);
     onInsert(latex);
     if (mf.setValue) mf.setValue(''); else mf.value = '';
@@ -4900,13 +4984,9 @@ function CkEditor({ value, onChange }) {
     setPopup(null);
     setEditingWidget(null);
 
-    // Clear the selection so that clicking the widget again registers as a change
-    const editor = editorRef.current;
-    if (editor) {
-      editor.model.change(writer => {
-        writer.setSelection(null);
-      });
-    }
+    // We explicitly DO NOT clear the selection here anymore. 
+    // Doing so destroyed the carefully constructed caret placement 
+    // made during handleInsert, causing the caret to jump to the left.
   }, []);
 
   const [insertAsUnicode, setInsertAsUnicode] = useState(false);
@@ -4952,7 +5032,17 @@ function CkEditor({ value, onChange }) {
       editor.model.change((writer) => {
         const mathElement = writer.createElement('mathInline', { latex: latex.trim() });
         editor.model.insertContent(mathElement);
-        editor.model.insertContent(writer.createText(' '));
+
+        // Create position after the inserted widget
+        const posAfter = writer.createPositionAfter(mathElement);
+
+        // Insert a space to anchor the caret to the right side of the inline object
+        // This is necessary because browsers struggle to render the caret correctly 
+        // after inline-block widgets at the end of a line.
+        writer.insertText(' ', posAfter);
+
+        // Move the selection explicitly after the inserted space
+        writer.setSelection(posAfter.getShiftedBy(1));
       });
     }
 
