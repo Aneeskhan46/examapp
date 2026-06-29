@@ -528,6 +528,7 @@ math-field.cme-mathfield::part(virtual-keyboard-toggle) {
   color: #888888;
 }
 
+
 /* ── Main Input Box ──────────────────────────────────────── */
 .Input-question-box {
   padding: 0;

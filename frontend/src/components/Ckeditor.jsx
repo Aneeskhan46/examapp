@@ -48,6 +48,10 @@ window.__cme_macros = {
   cmeLeftRightBoth: {
     def: '\\htmlClass{cme-flip-v}{\\xtofrom[\\htmlClass{cme-flip-v}{#1}]{\\htmlClass{cme-flip-v}{#2}}}',
     args: 2
+  },
+  cmeWideHat: {
+    def: '\\htmlClass{cme-wide-hat-text}{#1}',
+    args: 1
   }
 };
 
@@ -1474,7 +1478,7 @@ const MATH_GROUPS = [
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 20H46" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\overline{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Bar accent' },
 
       // Wide hat
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\widehat{\\mathrm{#?}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\cmeWideHat{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
 
       // Tilde accent
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M22 20 Q27 16 32 20 T42 20" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\tilde{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Tilde accent' },
@@ -3279,8 +3283,10 @@ const CHEM_GROUPS = [
       // Bar accent
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 20H46" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\overline{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Bar accent' },
 
+
+    
       // Wide hat
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\widehat{\\mathrm{#?}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\cmeWideHat{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
 
       // Tilde accent
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M22 20 Q27 16 32 20 T42 20" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\tilde{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Tilde accent' },
@@ -4190,7 +4196,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
     if (!mf) return;
     
     // Register custom macros for perfectly synchronized double arrows
-    mf.setOptions({ macros: window.__cme_macros || {} });
+    mf.macros = { ...mf.macros, ...(window.__cme_macros || {}) };
 
     // Always use math mode so LaTeX commands (like \enclose and \placeholder) parse correctly, even in chem tab
     mf.defaultMode = 'math';

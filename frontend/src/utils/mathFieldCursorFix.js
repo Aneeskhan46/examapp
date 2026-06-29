@@ -55,6 +55,22 @@ function injectMathFieldStyles(mathFieldEl) {
       display: inline-block !important;
       transform: scaleY(-1) !important;
     }
+    .cme-wide-hat-text {
+      position: relative;
+      display: inline-block !important;
+    }
+    .cme-wide-hat-text::before {
+      content: '';
+      position: absolute;
+      top: -0.1em;
+      left: 0;
+      width: 100%;
+      height: 0.4em;
+      background-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 10 L 50 0 L 100 10' stroke='black' stroke-width='1' fill='none' vector-effect='non-scaling-stroke' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      pointer-events: none;
+    }
   `;
 }
 

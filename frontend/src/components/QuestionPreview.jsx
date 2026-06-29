@@ -8,7 +8,17 @@ function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function cleanLatexForPreview(latex) {
+  if (!latex) return "";
+  return latex.replace(/\\placeholder(\[[^\]]*\])?({[^}]*})?/g, "\\text{ }");
+}
+
 function createPreviewMathField(latex) {
+  const cleaned = cleanLatexForPreview(latex);
+  if (!cleaned || cleaned.trim() === "") {
+    return document.createTextNode(" ");
+  }
+
   const mf = document.createElement("math-field");
   mf.setAttribute("read-only", "");
   mf.setAttribute(
@@ -27,8 +37,8 @@ function createPreviewMathField(latex) {
     ].join(";")
   );
   requestAnimationFrame(() => {
-    if (mf.setValue) mf.setValue(latex);
-    else mf.value = latex;
+    if (mf.setValue) mf.setValue(cleaned);
+    else mf.value = cleaned;
   });
   return mf;
 }
@@ -49,7 +59,34 @@ function appendHtmlContent(parent, html) {
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         const tag = node.nodeName;
         if (tag === "MATH-FIELD") {
-          dest.appendChild(node.cloneNode(true));
+          const rawLatex = node.getAttribute("value") || node.value || node.textContent || "";
+          const cleaned = cleanLatexForPreview(rawLatex);
+          if (!cleaned || cleaned.trim() === "") {
+            dest.appendChild(document.createTextNode(" "));
+          } else {
+            const mf = document.createElement("math-field");
+            mf.setAttribute("read-only", "");
+            mf.setAttribute(
+              "style",
+              [
+                "display:inline-block",
+                "vertical-align:middle",
+                "border:none",
+                "background:transparent",
+                "outline:none",
+                "padding:0 2px",
+                "margin:0 1px",
+                "font-size:inherit",
+                "min-height:auto",
+                "--primary-color:#0f766e",
+              ].join(";")
+            );
+            requestAnimationFrame(() => {
+              if (mf.setValue) mf.setValue(cleaned);
+              else mf.value = cleaned;
+            });
+            dest.appendChild(mf);
+          }
         } else if (tag === "BR") {
           dest.appendChild(document.createElement("br"));
         } else if (tag === "SPAN" && node.classList.contains("math-tex")) {
@@ -122,10 +159,8 @@ export default function QuestionPreview({ value = "" }) {
 
     el.querySelectorAll("span.math-tex").forEach((span) => {
       const latex = span.getAttribute("data-latex") || span.textContent || "";
-      if (latex) {
-        const mf = createPreviewMathField(latex);
-        span.replaceWith(mf);
-      }
+      const mf = createPreviewMathField(latex);
+      span.replaceWith(mf);
     });
   }, [value]);
 
