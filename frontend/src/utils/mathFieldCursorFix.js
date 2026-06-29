@@ -51,6 +51,10 @@ function injectMathFieldStyles(mathFieldEl) {
       display: inline-block !important;
       transform: scaleX(2.2) !important;
     }
+    .cme-flip-v {
+      display: inline-block !important;
+      transform: scaleY(-1) !important;
+    }
   `;
 }
 

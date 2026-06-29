@@ -5,6 +5,11 @@
 /* ── Google Font ─────────────────────────────────────────── */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
+.cme-flip-v {
+  display: inline-block;
+  transform: scaleY(-1);
+}
+
 .cme-wrapper {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://localhost:5173/node_modules/mathlive/dist/mathlive.mjs" type="module"></script>
+</head>
+<body>
+<h3>Test Matrix Extensible</h3>
+<math-field id="mf1">\begin{array}{c} \xleftarrow{LONG LONG LONG LONG LONG} \\ \xrightarrow{SHORT} \end{array}</math-field>
+
+<script type="module">
+  // MathLive needs to be initialized or parsed properly sometimes.
+  customElements.whenDefined('math-field').then(() => {
+    document.getElementById('mf1').value = '\\begin{array}{c} \\xleftarrow{LONG LONG LONG LONG LONG} \\\\ \\xrightarrow{SHORT} \\end{array}';
+  });
+</script>
+</body>
+</html>

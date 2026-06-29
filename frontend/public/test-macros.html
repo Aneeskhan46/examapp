@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://localhost:5173/node_modules/mathlive/dist/mathlive.mjs" type="module"></script>
+</head>
+<body>
+<math-field id="mf1">\cmeLeftRightBoth{A}{B}</math-field>
+
+<script type="module">
+  import { MathfieldElement } from 'http://localhost:5173/node_modules/mathlive/dist/mathlive.mjs';
+  
+  const macros = {
+    cmeLeftRightBoth: {
+      def: '\\overset{\\xleftarrow{\\phantom{#2}#1}}{\\xrightarrow[#2\\phantom{#1}]{}}',
+      args: 2
+    }
+  };
+
+  const mf = document.getElementById('mf1');
+  mf.setOptions({ macros: macros });
+  
+  // Need to reset the value so it parses with the new macros
+  mf.value = '\\cmeLeftRightBoth{A}{B}';
+</script>
+</body>
+</html>
