@@ -82,7 +82,7 @@
 }
 
 .cme-group-tab {
-  background: url("data:image/png;base64,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") no-repeat top / 100% 135%;
+  background: linear-gradient(to bottom, #64B5F6 0%, #42A5F5 50%, #1E88E5 100%);
   border: none;
   border-bottom: none;
   border-top-left-radius: 5px;
@@ -104,24 +104,18 @@
   justify-content: center;
 }
 
-.cme-group-tab:hover {
-  background: #95ae99;
+.cme-group-tab:not(.active):hover {
+  background: linear-gradient(to bottom, #64B5F6, #1E88E5) !important;
   color: #ffffff;
+  box-shadow: 0 -2px 6px rgba(66, 165, 245, 0.35);
 }
 
-/* .cme-group-tab:last-child:not(.active) {
-  background: #DC9E9E;
-}
-
-.cme-group-tab:last-child:not(.active):hover {
-  background: #95ae99;
-} */
 
 .cme-group-tab.active {
 
-  background: linear-gradient(to bottom, #e6eef4 0%, #f4f7f9 100%);
-  color: #333333;
-  border: 1px solid #778E9A;
+  background: linear-gradient(to bottom, #ffffff 0%, #F0F8FF 100%);
+  color: #1565C0;
+  border: 1px solid #90CAF9;
   border-bottom: none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -141,6 +135,7 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  box-shadow: 0 -2px 8px rgba(66, 165, 245, 0.2);
 }
 
 .cme-toolbar-items {
@@ -224,14 +219,14 @@
 }
 
 .cme-btn:hover {
-  background: #ffffff;
-  border-color: #7eaef4;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: #E8F4FF;
+  border-color: #42A5F5;
+  box-shadow: 0 1px 3px rgba(66, 165, 245, 0.2);
 }
 
 .cme-btn:active {
-  background: #cbdff9;
-  border-color: #4a90e2;
+  background: #BBDEFB;
+  border-color: #1E88E5;
 }
 
 .cme-btn.template {
@@ -275,9 +270,9 @@
 }
 
 .cme-matrix-subgroup .cme-btn:hover {
-  background: #ffffff;
-  border-color: #7eaef4;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: #E8F4FF;
+  border-color: #42A5F5;
+  box-shadow: 0 1px 3px rgba(66, 165, 245, 0.2);
 }
 
 .cme-more-popup-btn.cme-matrix-subgroup {
@@ -312,8 +307,8 @@
 }
 
 .cme-btn.chem-element:hover {
-  background: #ffffff;
-  border-color: #7eaef4;
+  background: #E8F4FF;
+  border-color: #42A5F5;
 }
 
 /* Periodic Table Colors */
@@ -393,8 +388,8 @@
 
 .cme-btn.chem-arrow:hover,
 .cme-btn.chem-state:hover {
-  background: #ffffff;
-  border-color: #7eaef4;
+  background: #E8F4FF;
+  border-color: #42A5F5;
 }
 
 .cme-sep {
@@ -459,14 +454,14 @@ math-field.cme-mathfield {
   cursor: text;
   overflow: visible !important;
 
-  /* ── MathLive theme tokens: Green Caret and Accent ────── */
-  --hue: 120;
-  --primary-color: #008000;
-  --caret-color: #008000;
-  --selection-background-color: rgba(0, 128, 0, 0.15);
-  --selection-color: #004d00;
+  /* ── MathLive theme tokens: Brand Blue Caret and Accent ── */
+  --hue: 207;
+  --primary-color: #1E88E5;
+  --caret-color: #42A5F5;
+  --selection-background-color: rgba(66, 165, 245, 0.18);
+  --selection-color: #1565C0;
   --contains-highlight-background-color: transparent;
-  --smart-fence-color: #008000;
+  --smart-fence-color: #1E88E5;
   --text-font-family: "Times New Roman", Times, serif;
   --highlight-inactive-color: transparent;
   --text-highlight-background-color: transparent;
@@ -605,8 +600,8 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   align-items: center;
   justify-content: space-between;
   padding: 6px 12px;
-  background: #778E9A;
-  /* Steel-blue / Slate-blue */
+  background: linear-gradient(135deg, #42A5F5 0%, #1976D2 100%);
+  /* Sky Blue → Deep Blue brand gradient */
   color: #ffffff;
   font-weight: 500;
   font-size: 13px;
@@ -669,19 +664,22 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-insert-btn {
-  background: #778e9a;
+  background: linear-gradient(135deg, #42A5F5 0%, #1976D2 100%);
   color: #ffffff;
-  border: 1px solid #4a687c;
+  border: none;
   padding: 6px 20px;
   border-radius: 4px;
   font-weight: 500;
   font-size: 12px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.1s;
+  box-shadow: 0 2px 10px rgba(66, 165, 245, 0.4);
 }
 
 .cme-insert-btn:hover {
-  background: #47667a;
+  background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+  box-shadow: 0 4px 14px rgba(66, 165, 245, 0.5);
+  transform: translateY(-1px);
 }
 
 .cme-cancel-btn {
@@ -728,7 +726,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 .cme-matrix-label {
   font-size: 13px;
   font-weight: 600;
-  color: #333333;
+  color: #1565C0;
   margin-bottom: 8px;
   user-select: none;
 }
@@ -744,16 +742,16 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 .cme-matrix-cell {
   width: 20px;
   height: 20px;
-  border: 1px solid #e1e1e1;
-  border-radius: 2px;
+  border: 1px solid #DDEEFF;
+  border-radius: 3px;
   background: #ffffff;
   cursor: pointer;
   transition: background 0.1s, border-color 0.1s;
 }
 
 .cme-matrix-cell.selected {
-  background: #778e9a;
-  border-color: #4a687c;
+  background: linear-gradient(135deg, #64B5F6, #1976D2);
+  border-color: #1976D2;
 }
 
 /* ── Matrix Hover popover ────────────────────────────────── */
@@ -1042,7 +1040,7 @@ input.cme-counter-val[type=number] {
   background: transparent;
   border: none;
 
-  color: #517085;
+  color: #1976D2;
   font-size: 9px;
   cursor: pointer;
   display: flex;
@@ -1058,17 +1056,17 @@ input.cme-counter-val[type=number] {
 }
 
 .cme-more-trigger-btn:hover {
-  background: #778e9a;
+  background: #42A5F5;
   color: #ffffff;
-  border-color: #40596b;
+  border-color: #1976D2;
 }
 
 /* ── More operators popup (WirisType style) ─────────────────── */
 .cme-more-popup {
   position: fixed;
   z-index: 99999;
-  background: linear-gradient(to bottom, #f4f7f9 0%, #e6eef4 100%);
-  border: 1px solid #99b1c1;
+  background: linear-gradient(to bottom, #F5FAFF 0%, #E8F4FF 100%);
+  border: 1px solid #90CAF9;
   border-radius: 5px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
   padding: 9px 0px;
@@ -1116,12 +1114,12 @@ input.cme-counter-val[type=number] {
 }
 
 .cme-more-popup-btn:hover {
-  background: #ffffff;
-  border-color: #7eaef4;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  background: #E8F4FF;
+  border-color: #42A5F5;
+  box-shadow: 0 1px 3px rgba(66, 165, 245, 0.2);
 }
 
 .cme-more-popup-btn:active {
-  background: #cbdff9;
-  border-color: #4a90e2;
+  background: #BBDEFB;
+  border-color: #1E88E5;
 }
