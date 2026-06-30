@@ -9,8 +9,46 @@ function escapeRegex(str) {
 }
 
 function cleanLatexForPreview(latex) {
-  if (!latex) return "";
-  return latex.replace(/\\placeholder(\[[^\]]*\])?({[^}]*})?/g, "\\text{ }");
+  if (!latex) return '';
+  let result = '';
+  let i = 0;
+  while (i < latex.length) {
+    let pos = latex.indexOf('\\placeholder', i);
+    if (pos === -1) {
+      result += latex.slice(i);
+      break;
+    }
+    result += latex.slice(i, pos);
+    i = pos + '\\placeholder'.length;
+    
+    if (latex[i] === '[') {
+      let bracketCount = 1;
+      i++;
+      while (i < latex.length && bracketCount > 0) {
+        if (latex[i] === '[') bracketCount++;
+        else if (latex[i] === ']') bracketCount--;
+        i++;
+      }
+    }
+    
+    if (latex[i] === '{') {
+      let braceCount = 1;
+      let start = i + 1;
+      i++;
+      while (i < latex.length && braceCount > 0) {
+        if (latex[i] === '{') braceCount++;
+        else if (latex[i] === '}') braceCount--;
+        i++;
+      }
+      let content = latex.slice(start, i - 1);
+      if (content.trim() === '') {
+        result += '\\text{ }';
+      } else {
+        result += content;
+      }
+    }
+  }
+  return result;
 }
 
 function createPreviewMathField(latex) {
@@ -36,10 +74,23 @@ function createPreviewMathField(latex) {
       "--primary-color:#0f766e",
     ].join(";")
   );
-  requestAnimationFrame(() => {
-    if (mf.setValue) mf.setValue(cleaned);
-    else mf.value = cleaned;
-  });
+  const setLatex = () => {
+    if (!mf.isConnected) {
+      requestAnimationFrame(setLatex);
+      return;
+    }
+    try {
+      if (window.__cme_macros) {
+        mf.macros = { ...mf.macros, ...window.__cme_macros };
+      }
+      if (mf.setValue) mf.setValue(cleaned);
+      else mf.value = cleaned;
+    } catch (e) {
+      console.error("Error setting LaTeX in QuestionPreview:", e);
+    }
+  };
+
+  requestAnimationFrame(setLatex);
   return mf;
 }
 

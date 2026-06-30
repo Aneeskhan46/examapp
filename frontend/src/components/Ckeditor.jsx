@@ -38,19 +38,19 @@ import SpecialCharacterModal from './SpecialCharacterModal';
 window.__cme_macros = {
   ...window.__cme_macros,
   cmeLeftRightAbove: {
-    def: '\\htmlClass{cme-flip-v}{\\xtofrom[\\htmlClass{cme-flip-v}{#1}]{}}',
+    def: '\\class{cme-flip-v}{\\xtofrom[\\class{cme-flip-v}{#1}]{}}',
     args: 1
   },
   cmeLeftRightBelow: {
-    def: '\\htmlClass{cme-flip-v}{\\xtofrom{\\htmlClass{cme-flip-v}{#1}}}',
+    def: '\\class{cme-flip-v}{\\xtofrom{\\class{cme-flip-v}{#1}}}',
     args: 1
   },
   cmeLeftRightBoth: {
-    def: '\\htmlClass{cme-flip-v}{\\xtofrom[\\htmlClass{cme-flip-v}{#1}]{\\htmlClass{cme-flip-v}{#2}}}',
+    def: '\\class{cme-flip-v}{\\xtofrom[\\class{cme-flip-v}{#1}]{\\class{cme-flip-v}{#2}}}',
     args: 2
   },
   cmeWideHat: {
-    def: '\\htmlClass{cme-wide-hat-text}{#1}',
+    def: '\\class{cme-wide-hat-text}{#1}',
     args: 1
   }
 };
@@ -82,6 +82,54 @@ function findMathWidgetFromEventTarget(target) {
   }
 
   return target instanceof Element ? target.closest?.('.ck-math-widget, [data-math-id]') : null;
+}
+
+/**
+ * Strip \placeholder[id]{content} or \placeholder{content} wrappers robustly.
+ */
+function stripPlaceholders(latex) {
+  if (!latex) return '';
+  let result = '';
+  let i = 0;
+  while (i < latex.length) {
+    let pos = latex.indexOf('\\placeholder', i);
+    if (pos === -1) {
+      result += latex.slice(i);
+      break;
+    }
+    result += latex.slice(i, pos);
+    i = pos + '\\placeholder'.length;
+    
+    // skip optional [id]
+    if (latex[i] === '[') {
+      let bracketCount = 1;
+      i++;
+      while (i < latex.length && bracketCount > 0) {
+        if (latex[i] === '[') bracketCount++;
+        else if (latex[i] === ']') bracketCount--;
+        i++;
+      }
+    }
+    
+    // extract content inside {}
+    if (latex[i] === '{') {
+      let braceCount = 1;
+      let start = i + 1;
+      i++;
+      while (i < latex.length && braceCount > 0) {
+        if (latex[i] === '{') braceCount++;
+        else if (latex[i] === '}') braceCount--;
+        i++;
+      }
+      let content = latex.slice(start, i - 1);
+      if (content.trim() === '') {
+        result += '\\quad ';
+      } else {
+        result += content;
+      }
+    }
+  }
+  return result;
 }
 
 /**
@@ -576,9 +624,9 @@ const MATH_GROUPS = [
           { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="12" y1="24" x2="52" y2="24" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M18 16L6 24L18 32V26H26V22H18V16Z" fill="#222" stroke="none" /><path d="M46 16L58 24L46 32V26H38V22H46V16Z" fill="#222" stroke="none" /><rect x="24" y="38" width="10" height="16" rx="2" /></svg>), insert: '\\xleftrightarrow[#?]{}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrow with Label Below' },
           { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="24" y="2" width="10" height="16" rx="2" /><line x1="12" y1="32" x2="52" y2="32" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M18 24L6 32L18 40V34H26V30H18V24Z" fill="#222" stroke="none" /><path d="M46 24L58 32L46 40V34H38V30H46V24Z" fill="#222" stroke="none" /><rect x="24" y="44" width="10" height="16" rx="2" /></svg>), insert: '\\xleftrightarrow[#?]{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrow with Above and Below Labels' },
 
-          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="30" x2="52" y2="30" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 22L12 30L24 38V32H34V28H24V22Z" fill="#222" stroke="none" /><line x1="12" y1="44" x2="46" y2="44" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 36L52 44L40 52V46H30V42H40V36Z" fill="#222" stroke="none" /></svg>), insert: '\\cmeLeftRightAbove{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Above' },
-          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="18" y1="20" x2="52" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 12L12 20L24 28V22H34V18H24V12Z" fill="#222" stroke="none" /><line x1="12" y1="34" x2="46" y2="34" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 26L52 34L40 42V36H30V32H40V26Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\cmeLeftRightBelow{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Below' },
-          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="26" x2="52" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 18L12 26L24 34V28H34V24H24V18Z" fill="#222" stroke="none" /><line x1="12" y1="40" x2="46" y2="40" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 32L52 40L40 48V42H30V38H40V32Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\cmeLeftRightBoth{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Above and Below Labels' },
+          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="30" x2="52" y2="30" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 22L12 30L24 38V32H34V28H24V22Z" fill="#222" stroke="none" /><line x1="12" y1="44" x2="46" y2="44" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 36L52 44L40 52V46H30V42H40V36Z" fill="#222" stroke="none" /></svg>), insert: '\\class{cme-flip-v}{\\xtofrom[\\class{cme-flip-v}{#?}]{}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Above' },
+          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="18" y1="20" x2="52" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 12L12 20L24 28V22H34V18H24V12Z" fill="#222" stroke="none" /><line x1="12" y1="34" x2="46" y2="34" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 26L52 34L40 42V36H30V32H40V26Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\class{cme-flip-v}{\\xtofrom{\\class{cme-flip-v}{#?}}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Below' },
+          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="26" x2="52" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 18L12 26L24 34V28H34V24H24V18Z" fill="#222" stroke="none" /><line x1="12" y1="40" x2="46" y2="40" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 32L52 40L40 48V42H30V38H40V32Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\class{cme-flip-v}{\\xtofrom[\\class{cme-flip-v}{#?}]{\\class{cme-flip-v}{#?}}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Above and Below Labels' },
 
           { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="24" y="2" width="10" height="16" rx="2" /><line x1="12" y1="26" x2="46" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 18L52 26L40 34V28H30V24H40V18Z" fill="#222" stroke="none" /><line x1="18" y1="40" x2="52" y2="40" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 32L12 40L24 48V42H34V38H24V32Z" fill="#222" stroke="none" /></svg>), insert: '\\xleftrightarrows{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Equilibrium Arrow with Label Above' },
           { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="12" y1="20" x2="46" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 12L52 20L40 28V22H30V18H40V12Z" fill="#222" stroke="none" /><line x1="18" y1="34" x2="52" y2="34" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 26L12 34L24 42V36H34V32H24V26Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\xleftrightarrows[#?]{}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Equilibrium Arrow with Label Below' },
@@ -1478,7 +1526,7 @@ const MATH_GROUPS = [
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 20H46" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\overline{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Bar accent' },
 
       // Wide hat
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\cmeWideHat{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\class{cme-wide-hat-text}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
 
       // Tilde accent
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M22 20 Q27 16 32 20 T42 20" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\tilde{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Tilde accent' },
@@ -2382,9 +2430,9 @@ const CHEM_GROUPS = [
           { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="12" y1="24" x2="52" y2="24" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M18 16L6 24L18 32V26H26V22H18V16Z" fill="#222" stroke="none" /><path d="M46 16L58 24L46 32V26H38V22H46V16Z" fill="#222" stroke="none" /><rect x="24" y="38" width="10" height="16" rx="2" /></svg>), insert: '\\xleftrightarrow[#?]{}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrow with Label Below' },
           { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="24" y="2" width="10" height="16" rx="2" /><line x1="12" y1="32" x2="52" y2="32" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M18 24L6 32L18 40V34H26V30H18V24Z" fill="#222" stroke="none" /><path d="M46 24L58 32L46 40V34H38V30H46V24Z" fill="#222" stroke="none" /><rect x="24" y="44" width="10" height="16" rx="2" /></svg>), insert: '\\xleftrightarrow[#?]{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrow with Above and Below Labels' },
 
-         { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="30" x2="52" y2="30" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 22L12 30L24 38V32H34V28H24V22Z" fill="#222" stroke="none" /><line x1="12" y1="44" x2="46" y2="44" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 36L52 44L40 52V46H30V42H40V36Z" fill="#222" stroke="none" /></svg>), insert: '\\cmeLeftRightAbove{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Above' },
-          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="18" y1="20" x2="52" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 12L12 20L24 28V22H34V18H24V12Z" fill="#222" stroke="none" /><line x1="12" y1="34" x2="46" y2="34" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 26L52 34L40 42V36H30V32H40V26Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\cmeLeftRightBelow{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Below' },
-          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="26" x2="52" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 18L12 26L24 34V28H34V24H24V18Z" fill="#222" stroke="none" /><line x1="12" y1="40" x2="46" y2="40" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 32L52 40L40 48V42H30V38H40V32Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\cmeLeftRightBoth{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Above and Below Labels' },
+         { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="30" x2="52" y2="30" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 22L12 30L24 38V32H34V28H24V22Z" fill="#222" stroke="none" /><line x1="12" y1="44" x2="46" y2="44" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 36L52 44L40 52V46H30V42H40V36Z" fill="#222" stroke="none" /></svg>), insert: '\\class{cme-flip-v}{\\xtofrom[\\class{cme-flip-v}{#?}]{}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Above' },
+          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="18" y1="20" x2="52" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 12L12 20L24 28V22H34V18H24V12Z" fill="#222" stroke="none" /><line x1="12" y1="34" x2="46" y2="34" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 26L52 34L40 42V36H30V32H40V26Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\class{cme-flip-v}{\\xtofrom{\\class{cme-flip-v}{#?}}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Label Below' },
+          { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="28" y="2" width="10" height="16" rx="2" /><line x1="18" y1="26" x2="52" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 18L12 26L24 34V28H34V24H24V18Z" fill="#222" stroke="none" /><line x1="12" y1="40" x2="46" y2="40" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 32L52 40L40 48V42H30V38H40V32Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\class{cme-flip-v}{\\xtofrom[\\class{cme-flip-v}{#?}]{\\class{cme-flip-v}{#?}}}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Left Right Arrows with Above and Below Labels' },
 
            { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="24" y="2" width="10" height="16" rx="2" /><line x1="12" y1="26" x2="46" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 18L52 26L40 34V28H30V24H40V18Z" fill="#222" stroke="none" /><line x1="18" y1="40" x2="52" y2="40" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 32L12 40L24 48V42H34V38H24V32Z" fill="#222" stroke="none" /></svg>), insert: '\\xleftrightarrows{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Equilibrium Arrow with Label Above' },
           { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="12" y1="20" x2="46" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M40 12L52 20L40 28V22H30V18H40V12Z" fill="#222" stroke="none" /><line x1="18" y1="34" x2="52" y2="34" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M24 26L12 34L24 42V36H34V32H24V26Z" fill="#222" stroke="none" /><rect x="24" y="46" width="10" height="16" rx="2" /></svg>), insert: '\\xleftrightarrows[#?]{}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Equilibrium Arrow with Label Below' },
@@ -3286,7 +3334,7 @@ const CHEM_GROUPS = [
 
     
       // Wide hat
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\cmeWideHat{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M18 24L32 12L46 24" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\class{cme-wide-hat-text}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Wide hat' },
 
       // Tilde accent
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M22 20 Q27 16 32 20 T42 20" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" /><rect x="26" y="30" width="12" height="20" rx="1" /></svg>), insert: '\\tilde{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Tilde accent' },
@@ -3683,6 +3731,14 @@ const CHEM_GROUPS = [
 function serializeChemValue(latex = '') {
   const match = String(latex).match(/^\\ce\{([\s\S]*)\}$/);
   if (match) return latex;
+  
+  // If the formula contains our custom CSS classes, wrapping it in \ce{} will break
+  // because mhchem parses class names like 'cme-wide-hat-text' as chemical elements (printing \imaginary for 'i', etc).
+  // We return it as-is (Math mode). The chem tab templates themselves will use \ce{} internally for the placeholders.
+  if (latex.includes('\\class{cme-')) {
+    return latex;
+  }
+
   const normalized = latex.replace(/\\text\{([^}]*)\}/g, '$1').replace(/\$/g, '').trim();
   return normalized ? `\\ce{${normalized}}` : '';
 }
@@ -3777,23 +3833,42 @@ class MathInlinePlugin extends Plugin {
             mf.style.pointerEvents = 'none';
 
             const setLatex = () => {
-              // Strip empty placeholders for display in CKEditor so it shows a space instead of a box
-              // We use \quad to ensure the space is distinctly visible and not swallowed
-              // We also strip \text{} wrappers because inside text mode (like \raisebox) they render as literal strings
-              let displayLatex = stripEncloseOptions(
-                stripTextWrappers(
-                  latex.replace(/\\placeholder\{[^}]*\}/g, '\\quad ')
-                )
-              );
-
-              // mhchem (\ce) ignores math padding like \, which causes \enclose circles to collapse and look small.
-              // If the widget contains \enclose and is wrapped in \ce{}, we unwrap it so it renders identically to the math editor.
-              if (displayLatex.includes('\\enclose') && /^\\ce\{[\s\S]*\}$/i.test(displayLatex.trim())) {
-                displayLatex = displayLatex.trim().replace(/^\\ce\{([\s\S]*)\}$/i, '$1');
+              if (!mf.isConnected) {
+                requestAnimationFrame(setLatex);
+                return;
               }
 
-              if (mf.setValue) mf.setValue(displayLatex, { silenceNotifications: true });
-              else mf.value = displayLatex;
+              try {
+                // Register custom macros so they render correctly in the CKEditor widget
+                // Accessing mf.macros can throw "Mathfield not mounted" if MathLive hasn't fully initialized
+                if (window.__cme_macros) {
+                  mf.macros = { ...mf.macros, ...window.__cme_macros };
+                }
+
+                // Strip empty placeholders for display in CKEditor so it shows a space instead of a box
+                // We use \quad to ensure the space is distinctly visible and not swallowed
+                // We also strip \text{} wrappers because inside text mode (like \raisebox) they render as literal strings
+                let displayLatex = stripEncloseOptions(
+                  stripTextWrappers(
+                    stripPlaceholders(latex)
+                  )
+                );
+
+                // mhchem (\ce) ignores math padding like \, which causes \enclose circles to collapse and look small.
+                // If the widget contains \enclose and is wrapped in \ce{}, we unwrap it so it renders identically to the math editor.
+                if (displayLatex.includes('\\enclose') && /^\\ce\{[\s\S]*\}$/i.test(displayLatex.trim())) {
+                  displayLatex = displayLatex.trim().replace(/^\\ce\{([\s\S]*)\}$/i, '$1');
+                }
+
+                if (mf.setValue) mf.setValue(displayLatex, { silenceNotifications: true });
+                else mf.value = displayLatex;
+              } catch (e) {
+                if (e.message && e.message.includes('mounted')) {
+                  requestAnimationFrame(setLatex);
+                } else {
+                  console.error('Error setting latex:', e);
+                }
+              }
             };
 
             if (customElements.get('math-field')) {
@@ -3851,7 +3926,7 @@ class MathInlinePlugin extends Plugin {
         // Strip placeholders and \text{} wrappers for the exported HTML so they render cleanly
         let displayLatex = stripEncloseOptions(
           stripTextWrappers(
-            latex.replace(/\\placeholder\{[^}]*\}/g, '\\quad ')
+            stripPlaceholders(latex)
           )
         );
 

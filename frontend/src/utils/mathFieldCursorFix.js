@@ -52,12 +52,11 @@ function injectMathFieldStyles(mathFieldEl) {
       transform: scaleX(2.2) !important;
     }
     .cme-flip-v {
-      display: inline-block !important;
+      display: inline-block;
       transform: scaleY(-1) !important;
     }
     .cme-wide-hat-text {
       position: relative;
-      display: inline-block !important;
     }
     .cme-wide-hat-text::before {
       content: '';
