@@ -1129,3 +1129,11 @@ input.cme-counter-val[type=number] {
   background: #BBDEFB;
   border-color: #1E88E5;
 }
+
+.cme-enclose-circle {
+  display: inline-block;
+  border: 1px solid currentColor;
+  border-radius: 80%;
+  padding: 0.1em 0.3em;
+  text-align: center;
+}

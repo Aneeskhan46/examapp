@@ -283,7 +283,7 @@ const MATH_GROUPS = [
       // 1. Root & Fraction Group (3 cols)
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="18" y="2" width="18" height="20" rx="2" /><line x1="6" y1="32" x2="50" y2="32" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="18" y="40" width="18" height="20" rx="2" /></svg>), insert: '\\frac{#0}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Fraction' },
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M6 34 L14 34 L20 50 L30 10 L54 10" stroke="#222" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" /><rect x="36" y="18" width="16" height="20" rx="2" /></svg>), insert: '\\sqrt{#0}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Square Root' },
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="5" y="16" width="18" height="20" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="18" height="20" rx="1" /></svg>), insert: '\\large \\nicefrac{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="5" y="16" width="18" height="20" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="18" height="20" rx="1" /></svg>), insert: '\\LARGE {}^{#?}/_{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
 
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><path d="M6 36 L14 36 L20 50 L30 10 L56 10" stroke="#222" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" /><rect x="12" y="16" width="8" height="12" rx="2" /><rect x="40" y="22" width="12" height="22" rx="2" /></svg>), insert: '\\sqrt[#?]{#0}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Nth Root Fraction' },
 
@@ -1241,8 +1241,8 @@ const MATH_GROUPS = [
           { label: (<svg width="26" height="30" viewBox="0 -6 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32', overflow: 'visible' }}><rect x="40" y="-2" width="10" height="16" rx="1" /><rect x="40" y="18" width="10" height="16" rx="1" /><rect x="40" y="46" width="10" height="16" rx="1" /><line x1="8" y1="38" x2="54" y2="38" stroke="#222" strokeWidth="4" strokeLinecap="round" /><line x1="10" y1="26" x2="26" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /></svg>), insert: '\\frac{\\begin{array}{r}#?\\\\-\\,#?\\end{array}}{\\quad#?', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Fraction with Subtraction' },
           { label: (<svg width="26" height="30" viewBox="0 -6 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32', overflow: 'visible' }}><rect x="40" y="-2" width="10" height="16" rx="1" /><rect x="40" y="18" width="10" height="16" rx="1" /><rect x="40" y="46" width="10" height="16" rx="1" /><line x1="8" y1="38" x2="54" y2="38" stroke="#222" strokeWidth="4" strokeLinecap="round" /><line x1="11" y1="19" x2="25" y2="33" stroke="#222" strokeWidth="4" strokeLinecap="round" /><line x1="25" y1="19" x2="11" y2="33" stroke="#222" strokeWidth="4" strokeLinecap="round" /></svg>), insert: '\\frac{\\begin{array}{r}#?\\\\×\\,#?\\end{array}}{\\quad#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Fraction with Multiplication' },
 
-          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><path d="M30 4V30H56" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="40" y="8" width="10" height="16" rx="1" /><rect x="40" y="40" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\begin{array}{|@{}l} \\underline{\\;#?\\;\\,} \\end{array} \\\\ & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division' },
-          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><rect x="4" y="44" width="10" height="16" rx="1" /><path d="M30 4V36H58" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="44" y="8" width="10" height="16" rx="1" /><rect x="44" y="44" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\begin{array}{|@{}l} \\underline{\\;#?\\;\\,} \\end{array} \\\\ #?\\, & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division with Four Terms' },
+          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><path d="M30 4V30H56" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="40" y="8" width="10" height="16" rx="1" /><rect x="40" y="40" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\class{cme-long-div}{#?} \\\\ & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division' },
+          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><rect x="4" y="44" width="10" height="16" rx="1" /><path d="M30 4V36H58" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="44" y="8" width="10" height="16" rx="1" /><rect x="44" y="44" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\class{cme-long-div}{#?} \\\\ #?\\, & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division with Four Terms' },
           //long dividosn
           { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="40" y="0" width="10" height="16" rx="1" /><line x1="30" y1="20" x2="54" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M26 18C34 25 34 47 26 54" stroke="#222" strokeWidth="4" fill="none" /><rect x="6" y="28" width="10" height="16" rx="1" /><rect x="40" y="28" width="10" height="16" rx="1" /><rect x="40" y="52" width="10" height="16" rx="1" /></svg>), insert: '#?\\, ) \\!\\!\\!\\!\\! \\begin{array}\\overset{\\displaystyle #?}{\\overline{\\vphantom{1}\\;\\;#?\\;}} \\\\ \\;\\;#?\\; \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Root with Fraction and Subscript' },
 
@@ -1288,11 +1288,11 @@ const MATH_GROUPS = [
       // { label: 'a⁄b', insert: '\\tfrac{#?}{#?}', title: 'Small fraction' },
 
       //fraction
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="5" y="16" width="18" height="20" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="18" height="20" rx="1" /></svg>), insert: '\\large \\nicefrac{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="5" y="16" width="18" height="20" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="18" height="20" rx="1" /></svg>), insert: '\\LARGE {}^{#?}/_{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
 
       // { label: 'A⁄B', insert: '{#?}/{#?}', title: 'Inline fraction' },
 
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="14" y="16" width="12" height="16" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="12" height="16" rx="1" /></svg>), insert: '\\nicefrac{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="14" y="16" width="12" height="16" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="12" height="16" rx="1" /></svg>), insert: '\\scriptsize {}^{#?}/_{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text SMALL Fraction' },
 
       // { label: '⎸/⎹', insert: '\\nicefrac{#?}{#?}', title: 'Nice fraction' },
 
@@ -1550,7 +1550,7 @@ const MATH_GROUPS = [
                 <rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" />
               </svg>
             ),
-            insert: '\\enclose{actuarial}{\\begin{array}{@{}c@{}} \\hspace{3px}#? \\end{array}}',
+            insert: '\\class{cme-enclose-actuarial}{#?}',
             title: 'Enclose actuarial'
           },
 
@@ -1560,7 +1560,7 @@ const MATH_GROUPS = [
             label: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <rect x="4" y="2" width="16" height="20" rx="8" ry="8" stroke="#666" strokeWidth="2" fill="none" />
               <rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" />
-            </svg>, insert: '\\enclose{roundedbox}{\\raisebox{-2.5px}{#?}}', title: 'Enclose rounded box'
+            </svg>, insert: '\\class{cme-enclose-roundedbox}{#?}', title: 'Enclose rounded box'
           },
 
         ]
@@ -1580,7 +1580,7 @@ const MATH_GROUPS = [
             <rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" />
           </svg>
         ),
-        insert: '\\boxed{#?}',
+        insert: '\\class{cme-enclose-box}{#?}',
         forceLabel: true,
         title: 'Enclosed box'
       },
@@ -1592,7 +1592,7 @@ const MATH_GROUPS = [
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="48" y1="12" x2="48" y2="52" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="22" y="18" width="14" height="28" rx="2" /></svg>), insert: '\\left. #? \\right|', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Enclosed right' },
 
       // Enclosed circle
-      { label: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="11" stroke="#666666" strokeWidth="2" fill="none" /><rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" /></svg>, insert: '\\enclose{circle}{\\begin{array}{@{}c@{}} \\raisebox{-2.5px}{\\,\\,#?} \\end{array}}', forceLabel: true, title: 'Enclose circle' },
+      { label: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="11" stroke="#666666" strokeWidth="2" fill="none" /><rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" /></svg>, insert: '\\class{cme-enclose-circle}{#?}', forceLabel: true, title: 'Enclose circle' },
 
 
 
@@ -1651,7 +1651,7 @@ const MATH_GROUPS = [
             <line x1="9" y1="21" x2="15" y2="3" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\enclose{updiagonalstrike}{#0}',
+        insert: '\\class{cme-cancel-strike}{#0}',
         forceLabel: true,
         title: 'Cancel strike'
       },
@@ -1665,7 +1665,7 @@ const MATH_GROUPS = [
             <line x1="6" y1="12" x2="18" y2="12" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\enclose{horizontalstrike}{\\begin{array}{c@{}} \\raisebox{-8px}{#?} \\end{array}}',
+        insert: '\\class{cme-horizontal-strike}{#?}',
         forceLabel: true,
         title: 'Horizontal strike'
       },
@@ -1678,7 +1678,7 @@ const MATH_GROUPS = [
             <line x1="9" y1="3" x2="15" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\enclose{downdiagonalstrike}{#0}',
+        insert: '\\class{cme-down-strike}{#0}',
         forceLabel: true,
         title: 'Down diagonal strike'
       },
@@ -1692,7 +1692,7 @@ const MATH_GROUPS = [
             <line x1="9" y1="3" x2="15" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\xcancel{#?}',
+        insert: '\\class{cme-cross-strike}{#?}',
         forceLabel: true,
         title: 'Cross strike'
       },
@@ -3047,8 +3047,8 @@ const CHEM_GROUPS = [
           { label: (<svg width="26" height="30" viewBox="0 -6 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32', overflow: 'visible' }}><rect x="40" y="-2" width="10" height="16" rx="1" /><rect x="40" y="18" width="10" height="16" rx="1" /><rect x="40" y="46" width="10" height="16" rx="1" /><line x1="8" y1="38" x2="54" y2="38" stroke="#222" strokeWidth="4" strokeLinecap="round" /><line x1="10" y1="26" x2="26" y2="26" stroke="#222" strokeWidth="4" strokeLinecap="round" /></svg>), insert: '\\frac{\\begin{array}{r}#?\\\\-\\,#?\\end{array}}{\\quad#?', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Fraction with Subtraction' },
           { label: (<svg width="26" height="30" viewBox="0 -6 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32', overflow: 'visible' }}><rect x="40" y="-2" width="10" height="16" rx="1" /><rect x="40" y="18" width="10" height="16" rx="1" /><rect x="40" y="46" width="10" height="16" rx="1" /><line x1="8" y1="38" x2="54" y2="38" stroke="#222" strokeWidth="4" strokeLinecap="round" /><line x1="11" y1="19" x2="25" y2="33" stroke="#222" strokeWidth="4" strokeLinecap="round" /><line x1="25" y1="19" x2="11" y2="33" stroke="#222" strokeWidth="4" strokeLinecap="round" /></svg>), insert: '\\frac{\\begin{array}{r}#?\\\\×\\,#?\\end{array}}{\\quad#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Fraction with Multiplication' },
 
-          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><path d="M30 4V30H56" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="40" y="8" width="10" height="16" rx="1" /><rect x="40" y="40" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\begin{array}{|@{}l} \\underline{\\;#?\\;\\,} \\end{array} \\\\ & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division' },
-          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><rect x="4" y="44" width="10" height="16" rx="1" /><path d="M30 4V36H58" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="44" y="8" width="10" height="16" rx="1" /><rect x="44" y="44" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\begin{array}{|@{}l} \\underline{\\;#?\\;\\,} \\end{array} \\\\ #?\\, & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division with Four Terms' },
+          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><path d="M30 4V30H56" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="40" y="8" width="10" height="16" rx="1" /><rect x="40" y="40" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\class{cme-long-div}{#?} \\\\ & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division' },
+          { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="4" y="8" width="10" height="16" rx="1" /><rect x="4" y="44" width="10" height="16" rx="1" /><path d="M30 4V36H58" stroke="#222" strokeWidth="4" fill="none" strokeLinecap="round" /><rect x="44" y="8" width="10" height="16" rx="1" /><rect x="44" y="44" width="10" height="16" rx="1" /></svg>), insert: '\\begin{array}{r@{}l} #?\\, & \\class{cme-long-div}{#?} \\\\ #?\\, & \\; #? \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Long Division with Four Terms' },
           //long dividosn
           { label: (<svg width="26" height="30" viewBox="0 0 64 72" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="40" y="0" width="10" height="16" rx="1" /><line x1="30" y1="20" x2="54" y2="20" stroke="#222" strokeWidth="4" strokeLinecap="round" /><path d="M26 18C34 25 34 47 26 54" stroke="#222" strokeWidth="4" fill="none" /><rect x="6" y="28" width="10" height="16" rx="1" /><rect x="40" y="28" width="10" height="16" rx="1" /><rect x="40" y="52" width="10" height="16" rx="1" /></svg>), insert: '#?\\, ) \\!\\!\\!\\!\\! \\begin{array}\\overset{\\displaystyle #?}{\\overline{\\vphantom{1}\\;\\;#?\\;}} \\\\ \\;\\;#?\\; \\end{array}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Root with Fraction and Subscript' },
 
@@ -3094,11 +3094,11 @@ const CHEM_GROUPS = [
       // { label: 'a⁄b', insert: '\\tfrac{#?}{#?}', title: 'Small fraction' },
 
       //fraction
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="5" y="16" width="18" height="20" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="18" height="20" rx="1" /></svg>), insert: '\\large \\nicefrac{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="5" y="16" width="18" height="20" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="18" height="20" rx="1" /></svg>), insert: '\\LARGE {}^{#?}/_{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
 
       // { label: 'A⁄B', insert: '{#?}/{#?}', title: 'Inline fraction' },
 
-      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="14" y="16" width="12" height="16" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="12" height="16" rx="1" /></svg>), insert: '\\nicefrac{#?}{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text Fraction' },
+      { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><rect x="14" y="16" width="12" height="16" rx="1" /><line x1="26" y1="50" x2="40" y2="18" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="38" y="34" width="12" height="16" rx="1" /></svg>), insert: '\\scriptsize {}^{#?}/_{#?}', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Text SMALL Fraction' },
 
       // { label: '⎸/⎹', insert: '\\nicefrac{#?}{#?}', title: 'Nice fraction' },
 
@@ -3358,7 +3358,7 @@ const CHEM_GROUPS = [
                 <rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" />
               </svg>
             ),
-            insert: '\\enclose{actuarial}{\\begin{array}{@{}c@{}} \\hspace{3px}#? \\end{array}}',
+            insert: '\\class{cme-enclose-actuarial}{#?}',
             title: 'Enclose actuarial'
           },
 
@@ -3368,7 +3368,7 @@ const CHEM_GROUPS = [
             label: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <rect x="4" y="2" width="16" height="20" rx="8" ry="8" stroke="#666" strokeWidth="2" fill="none" />
               <rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" />
-            </svg>, insert: '\\enclose{roundedbox}{\\raisebox{-2.5px}{#?}}', title: 'Enclose rounded box'
+            </svg>, insert: '\\class{cme-enclose-roundedbox}{#?}', title: 'Enclose rounded box'
           },
 
         ]
@@ -3388,7 +3388,7 @@ const CHEM_GROUPS = [
             <rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" />
           </svg>
         ),
-        insert: '\\boxed{#?}',
+        insert: '\\class{cme-enclose-box}{#?}',
         forceLabel: true,
         title: 'Enclosed box'
       },
@@ -3400,7 +3400,7 @@ const CHEM_GROUPS = [
       { label: (<svg width="26" height="26" viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="3" style={{ display: 'inline-block', verticalAlign: 'middle', color: '#2E7D32' }}><line x1="48" y1="12" x2="48" y2="52" stroke="#222" strokeWidth="4" strokeLinecap="round" /><rect x="22" y="18" width="14" height="28" rx="2" /></svg>), insert: '\\left. #? \\right|', cls: 'template', directInsert: true, action: 'INSERT_CUSTOM', title: 'Enclosed right' },
 
       // Enclosed circle
-      { label: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="11" stroke="#666666" strokeWidth="2" fill="none" /><rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" /></svg>, insert: '\\enclose{circle}{\\begin{array}{@{}c@{}} \\raisebox{-2.5px}{\\,\\,#?} \\end{array}}', forceLabel: true, title: 'Enclose circle' },
+      { label: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="12" rx="9" ry="11" stroke="#666666" strokeWidth="2" fill="none" /><rect x="9" y="7" width="6" height="10" rx="1" stroke="#2E7D32" strokeWidth="2" fill="none" /></svg>, insert: '\\class{cme-enclose-circle}{#?}', forceLabel: true, title: 'Enclose circle' },
 
 
 
@@ -3459,7 +3459,7 @@ const CHEM_GROUPS = [
             <line x1="9" y1="21" x2="15" y2="3" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\enclose{updiagonalstrike}{#0}',
+        insert: '\\class{cme-cancel-strike}{#0}',
         forceLabel: true,
         title: 'Cancel strike'
       },
@@ -3473,7 +3473,7 @@ const CHEM_GROUPS = [
             <line x1="6" y1="12" x2="18" y2="12" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\enclose{horizontalstrike}{\\begin{array}{c@{}} \\raisebox{-8px}{#?} \\end{array}}',
+        insert: '\\class{cme-horizontal-strike}{#?}',
         forceLabel: true,
         title: 'Horizontal strike'
       },
@@ -3486,7 +3486,7 @@ const CHEM_GROUPS = [
             <line x1="9" y1="3" x2="15" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\enclose{downdiagonalstrike}{#0}',
+        insert: '\\class{cme-down-strike}{#0}',
         forceLabel: true,
         title: 'Down diagonal strike'
       },
@@ -3500,7 +3500,7 @@ const CHEM_GROUPS = [
             <line x1="9" y1="3" x2="15" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
           </svg>
         ),
-        insert: '\\xcancel{#?}',
+        insert: '\\class{cme-cross-strike}{#?}',
         forceLabel: true,
         title: 'Cross strike'
       },

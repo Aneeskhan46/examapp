@@ -70,6 +70,95 @@ function injectMathFieldStyles(mathFieldEl) {
       background-repeat: no-repeat;
       pointer-events: none;
     }
+    .cme-enclose-circle {
+      display: inline-block;
+      border: 1px solid currentColor;
+      border-radius: 2em; /* Capsule shape guarantees no corner clipping */
+      padding: 0.1em 0.6em; /* Extra horizontal padding for the semi-circle ends */
+      text-align: center;
+    }
+    .cme-enclose-box {
+      display: inline-block;
+      border: 1px solid currentColor;
+      padding: 0.2em 0.3em;
+    }
+    .cme-enclose-roundedbox {
+      display: inline-block;
+      border: 1px solid currentColor;
+      border-radius: 0.5em;
+      padding: 0.2em 0.3em;
+    }
+    .cme-enclose-actuarial {
+      display: inline-block;
+      border-top: 1px solid currentColor;
+      border-right: 1px solid currentColor;
+      padding-top: 0.1em;
+      padding-right: 0.2em;
+      margin-right: 0.1em;
+    }
+    .cme-cancel-strike {
+      display: inline-block;
+      position: relative;
+    }
+    .cme-cancel-strike::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: currentColor;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='100' x2='100' y2='0' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='100' x2='100' y2='0' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3C/svg%3E");
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      pointer-events: none;
+    }
+    .cme-down-strike {
+      display: inline-block;
+      position: relative;
+    }
+    .cme-down-strike::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: currentColor;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='0' x2='100' y2='100' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='0' x2='100' y2='100' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3C/svg%3E");
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      pointer-events: none;
+    }
+    .cme-cross-strike {
+      display: inline-block;
+      position: relative;
+    }
+    .cme-cross-strike::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: currentColor;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='100' x2='100' y2='0' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3Cline x1='0' y1='0' x2='100' y2='100' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='0' y1='100' x2='100' y2='0' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3Cline x1='0' y1='0' x2='100' y2='100' stroke='black' stroke-width='2' vector-effect='non-scaling-stroke' /%3E%3C/svg%3E");
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      pointer-events: none;
+    }
+    .cme-horizontal-strike {
+      display: inline-block;
+      position: relative;
+    }
+    .cme-horizontal-strike::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      border-top: 1px solid currentColor;
+      pointer-events: none;
+    }
+    .cme-long-div {
+      display: inline-block;
+      border-bottom: 1px solid currentColor;
+      border-left: 1px solid currentColor;
+      padding: 0.1em 0.2em;
+      margin-left: 0.1em;
+    }
   `;
 }
 
