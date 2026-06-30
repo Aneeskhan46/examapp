@@ -4321,10 +4321,6 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
       // Forcefully apply bold/italic states via explicit LaTeX wrappers to bypass MathLive's buggy future-style insertion on empty lines
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         if (/[a-zA-Z0-9]/.test(e.key)) {
-          if (!activeStyles.bold && !activeStyles.italic) {
-            // Neither active: let MathLive handle it natively
-            return;
-          }
           e.preventDefault();
           e.stopPropagation();
           let latex = e.key;
@@ -4334,6 +4330,8 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
             latex = `\\mathbf{${e.key}}`;
           } else if (activeStyles.italic) {
             latex = `\\mathit{${e.key}}`;
+          } else {
+            latex = `\\mathrm{${e.key}}`;
           }
           mf.executeCommand(['insert', latex]);
           return;
