@@ -1136,4 +1136,5 @@ input.cme-counter-val[type=number] {
   border-radius: 80%;
   padding: 0.1em 0.3em;
   text-align: center;
-}
+}.ML__bold { font-weight: bold !important; }
+.cme-bold { font-weight: bold !important; font-family: inherit !important; }

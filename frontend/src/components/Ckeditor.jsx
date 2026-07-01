@@ -1609,7 +1609,7 @@ const MATH_GROUPS = [
                 <line x1="12" y1="3" x2="12" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
               </svg>
             ),
-            insert: '\\enclose{verticalstrike}{#?}',
+            insert: '\\class{cme-vertical-strike}{#?}',
             title: 'Vertical strike'
           },
 
@@ -1635,7 +1635,7 @@ const MATH_GROUPS = [
                 <line x1="12" y1="3" x2="12" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
               </svg>
             ),
-            insert: '\\enclose{horizontalstrike}{\\begin{array}{c@{}} \\raisebox{-8px}{\\enclose{verticalstrike}{\\vphantom{\\rule{0pt}{14px}}#?}} \\end{array}}',
+            insert: '\\class{cme-horizontal-vertical-strike}{#?}',
             title: 'Horizontal and vertical strike'
           },
 
@@ -3417,7 +3417,7 @@ const CHEM_GROUPS = [
                 <line x1="12" y1="3" x2="12" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
               </svg>
             ),
-            insert: '\\enclose{verticalstrike}{#?}',
+            insert: '\\class{cme-vertical-strike}{#?}',
             title: 'Vertical strike'
           },
 
@@ -3443,7 +3443,7 @@ const CHEM_GROUPS = [
                 <line x1="12" y1="3" x2="12" y2="21" stroke="#666" strokeWidth="2" strokeLinecap="round" />
               </svg>
             ),
-            insert: '\\enclose{horizontalstrike}{\\begin{array}{c@{}} \\raisebox{-8px}{\\enclose{verticalstrike}{\\vphantom{\\rule{0pt}{14px}}#?}} \\end{array}}',
+            insert: '\\class{cme-horizontal-vertical-strike}{#?}',
             title: 'Horizontal and vertical strike'
           },
 
@@ -4132,6 +4132,10 @@ function MatrixHoverGrid({ matrixType, x, y, onSelect, onMouseEnter, onMouseLeav
 /* ══════════════════════════════════════════════════════════
    MathChemPopup — same as CustomMathEditor popup
    ══════════════════════════════════════════════════════════ */
+let globalIsTyping = false;
+let globalTypingTimeout = null;
+let globalPopupMf = null;
+
 function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   const popupMfRef = useRef(null);
   const [activeGroup, setActiveGroup] = useState(0);
@@ -4184,26 +4188,32 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   });
 
   const updateActiveStyles = useCallback(() => {
+    if (globalIsTyping) return;
+    if (window.__cmeIgnoreStyleUpdate && Date.now() - window.__cmeIgnoreStyleUpdate < 150) return;
     const mf = popupMfRef.current;
     if (!mf || typeof mf.queryStyle !== 'function') return;
     try {
-      const bold = (
+      const bold = window.__cmeManualBold !== undefined ? window.__cmeManualBold : (
         mf.queryStyle({ fontSeries: 'b' }) === 'all' ||
         mf.queryStyle({ variantStyle: 'bold' }) === 'all'
       );
 
-      const mlItalic = (
+      const mlItalic = window.__cmeManualItalic !== undefined ? window.__cmeManualItalic : (
         mf.queryStyle({ variantStyle: 'italic' }) === 'all' ||
         mf.queryStyle({ shape: 'it' }) === 'all'
       );
 
-      const currentFont = ['roman', 'sans-serif', 'monospace'].find(
-        (f) => mf.queryStyle({ fontFamily: f }) === 'all'
-      ) || 'none';
+      const currentFont = window.__cmeManualFontFamily !== undefined ? window.__cmeManualFontFamily : (
+        ['roman', 'sans-serif', 'monospace'].find(
+          (f) => mf.queryStyle({ fontFamily: f }) === 'all'
+        ) || 'none'
+      );
 
-      const currentSize = [5, 7, 9].find(
-        (sz) => mf.queryStyle({ fontSize: sz }) === 'all'
-      ) || 'auto';
+      const currentSize = window.__cmeManualFontSize !== undefined ? window.__cmeManualFontSize : (
+        [5, 7, 9].find(
+          (sz) => mf.queryStyle({ fontSize: sz }) === 'all'
+        ) || 'auto'
+      );
 
       const currentColor = [
         'black', 'dimgray', 'gray', 'darkgray', 'silver', 'white',
@@ -4215,8 +4225,8 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
       ) || 'none';
 
       setActiveStyles(prev => ({
-        bold: prev.bold,
-        italic: prev.italic,
+        bold,
+        italic: mlItalic,
         fontFamily: currentFont,
         fontSize: String(currentSize),
         color: currentColor,
@@ -4267,7 +4277,8 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   }, [activeGroup]);
 
   useEffect(() => {
-    const mf = popupMfRef.current;
+    if (globalIsTyping) return;
+    const mf = globalPopupMf;
     if (!mf) return;
     
     // Register custom macros for perfectly synchronized double arrows
@@ -4315,24 +4326,64 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   }, [mode, initialLatex]);
 
   useEffect(() => {
-    const mf = popupMfRef.current;
+    const mf = globalPopupMf;
     if (!mf) return;
     const handleKeyDown = (e) => {
       // Forcefully apply bold/italic states via explicit LaTeX wrappers to bypass MathLive's buggy future-style insertion on empty lines
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        globalIsTyping = false;
+        clearTimeout(globalTypingTimeout);
+        window.__cmeManualBold = undefined;
+        window.__cmeManualItalic = undefined;
+        window.__cmeManualFontFamily = undefined;
+        window.__cmeManualFontSize = undefined;
+      } else if (e.key.length === 1 || e.key === ' ') {
+        globalIsTyping = true;
+        clearTimeout(globalTypingTimeout);
+        globalTypingTimeout = setTimeout(() => {
+          globalIsTyping = false;
+        }, 500);
+      }
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
         if (/[a-zA-Z0-9]/.test(e.key)) {
           e.preventDefault();
           e.stopPropagation();
-          let latex = e.key;
-          if (activeStyles.bold && activeStyles.italic) {
-            latex = `\\mathbfit{${e.key}}`;
-          } else if (activeStyles.bold) {
-            latex = `\\mathbf{${e.key}}`;
-          } else if (activeStyles.italic) {
-            latex = `\\mathit{${e.key}}`;
-          } else {
-            latex = `\\mathrm{${e.key}}`;
+          
+          const isSans = activeStyles.fontFamily === 'sans-serif';
+          const isMono = activeStyles.fontFamily === 'monospace';
+          const isBold = activeStyles.bold;
+          const isItalic = activeStyles.italic;
+
+          let fontCmd = '\\mathrm';
+          if (isSans) fontCmd = '\\mathsf';
+          else if (isMono) fontCmd = '\\mathtt';
+          else if (isItalic && !isBold) fontCmd = '\\mathit';
+          else if (isBold && !isItalic) fontCmd = '\\mathbf';
+
+          let inner = `${fontCmd}{${e.key}}`;
+
+          if (isBold && isItalic) {
+              inner = `\\boldsymbol{\\mathit{${e.key}}}`;
+              if (isSans) inner = `\\boldsymbol{\\mathsf{${e.key}}}`;
+              if (isMono) inner = `\\boldsymbol{\\mathtt{${e.key}}}`;
+          } else if (isBold && (isSans || isMono)) {
+              inner = `\\boldsymbol{${inner}}`;
           }
+
+          let latex = inner;
+
+          // Apply Size
+          const sizeVal = activeStyles.fontSize === 'auto' ? 5 : parseInt(activeStyles.fontSize, 10);
+          if (sizeVal !== 5) {
+             const sizeMap = { 1: '\\tiny', 2: '\\scriptsize', 3: '\\footnotesize', 4: '\\small', 5: '\\normalsize', 6: '\\large', 7: '\\Large', 8: '\\LARGE', 9: '\\huge', 10: '\\Huge' };
+             if (sizeMap[sizeVal]) latex = `{${sizeMap[sizeVal]} ${latex}}`;
+          }
+
+          // Apply Color
+          if (activeStyles.color !== 'none') {
+             latex = `\\textcolor{${activeStyles.color}}{${latex}}`;
+          }
+
           mf.executeCommand(['insert', latex]);
           return;
         }
@@ -4379,7 +4430,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
 
   /* ── Auto-scroll caret into view ── */
   useEffect(() => {
-    const popupMf = popupMfRef.current;
+    const popupMf = globalPopupMf;
     if (!popupMf) return;
 
     const handleSelectionChange = () => {
@@ -4410,7 +4461,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   }, [updateActiveStyles]);
 
   const insertAtCursor = useCallback((sym) => {
-    const mf = popupMfRef.current;
+    const mf = globalPopupMf;
     if (!mf) return;
     mf.focus();
     mf.executeCommand(['insert', sym]);
@@ -4430,7 +4481,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
   }, [insertAtCursor]);
 
   const handleInsert = () => {
-    const mf = popupMfRef.current;
+    const mf = globalPopupMf;
     if (!mf) return;
     let latex = mf.getValue ? mf.getValue() : mf.value;
     if (!latex || latex.trim() === '') { onClose(); return; }
@@ -4597,7 +4648,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                         }}
                         onChange={(e) => {
                           const val = e.target.value;
-                          const mf = popupMfRef.current;
+                          const mf = globalPopupMf;
                           if (!mf || typeof mf.applyStyle !== 'function') return;
                           mf.focus();
                           if (isFont) {
@@ -4643,6 +4694,13 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                             if (activeMatrix?.type === item.insert) {
                               setActiveMatrix(null);
                             } else {
+                              if (!globalIsTyping) {
+                                window.__cmeManualBold = undefined;
+                                window.__cmeManualItalic = undefined;
+                                window.__cmeManualFontFamily = undefined;
+                                window.__cmeManualFontSize = undefined;
+                              } else {
+                              }
                               const rect = e.currentTarget.getBoundingClientRect();
                               setActiveMatrix({
                                 type: item.insert,
@@ -4699,23 +4757,29 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                           const rect = e.currentTarget.getBoundingClientRect();
                           setShowColorPicker({ x: rect.left, y: rect.bottom + 4 });
                         } else if (item.action === 'BOLD') {
-                          if (mf && typeof mf.applyStyle === 'function') {
+                          if (mf) {
                             mf.focus();
                             const newBold = !activeStyles.bold;
-                            mf.applyStyle({
-                              fontSeries: newBold ? 'b' : 'auto',
-                              variantStyle: activeStyles.italic ? 'italic' : 'up'
-                            });
+                            window.__cmeManualBold = newBold;
+                            const sel = mf.selection;
+                            if (sel && !sel.isCollapsed) {
+                              let selText = mf.getValue(sel);
+                              selText = selText.replace(/\\mathrm{([^}]*)}/g, '$1');
+                              mf.executeCommand(['insert', `\\mathbf{${selText}}`]);
+                            }
                             setActiveStyles(prev => ({ ...prev, bold: newBold }));
                           }
                         } else if (item.action === 'ITALIC') {
-                          if (mf && typeof mf.applyStyle === 'function') {
+                          if (mf) {
                             mf.focus();
                             const newItalic = !activeStyles.italic;
-                            mf.applyStyle({
-                              fontSeries: activeStyles.bold ? 'b' : 'auto',
-                              variantStyle: newItalic ? 'italic' : 'up',
-                            });
+                            window.__cmeManualItalic = newItalic;
+                            const sel = mf.selection;
+                            if (sel && !sel.isCollapsed) {
+                              let selText = mf.getValue(sel);
+                              selText = selText.replace(/\\mathrm{([^}]*)}/g, '$1');
+                              mf.executeCommand(['insert', `\\mathit{${selText}}`]);
+                            }
                             setActiveStyles(prev => ({ ...prev, italic: newItalic }));
                           }
                         } else if (item.action === 'UNDO') {
@@ -4853,7 +4917,10 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
         }}
       >
         <math-field
-          ref={popupMfRef}
+          ref={(el) => {
+            popupMfRef.current = el;
+            globalPopupMf = el;
+          }}
           class="cme-mathfield"
           tabIndex={0}
           math-virtual-keyboard-policy="manual"
