@@ -118,9 +118,9 @@
 
 .cme-group-tab.active {
 
-  background: linear-gradient(to bottom, #ffffff 0%, #F0F8FF 100%);
+  background: linear-gradient(to bottom, #d8dbe0 0%, #f4f7f9 100%);
   color: #1565C0;
-  border: 1px solid #90CAF9;
+  border: 1px solid #778E9A;
   border-bottom: none;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -601,7 +601,7 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   }
 }
 
-.cme-popup-header {
+.cme-popup-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -609,19 +609,28 @@ math-field.cme-main-mathfield::part(menu-toggle) {
   background: linear-gradient(135deg, #42A5F5 0%, #1976D2 100%);
   /* Sky Blue → Deep Blue brand gradient */
   color: #ffffff;
-  font-weight: 500;
-  font-size: 13px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   height: 32px;
   box-sizing: border-box;
 }
 
+.cme-popup-header {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-weight: 500;
+  font-size: 13px;
+}
+
 .cme-popup-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   margin-left: auto;
+  height: 100%;
+  
 }
 
 .cme-popup-btn {
@@ -645,12 +654,12 @@ math-field.cme-main-mathfield::part(menu-toggle) {
 }
 
 .cme-editor-popup.maximized {
-  top: 10px !important;
-  left: 10px !important;
+  top: 50px !important;
+  left: 240px !important;
   right: 10px !important;
   bottom: 10px !important;
-  width: auto !important;
-  height: auto !important;
+  width: 1000px !important;
+  height: 600px !important;
   transform: none !important;
 }
 

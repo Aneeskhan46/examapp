@@ -4366,7 +4366,7 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
           let inner = `${fontCmd}{${e.key}}`;
 
           if (isBold && isItalic) {
-              inner = `\\boldsymbol{\\mathit{${e.key}}}`;
+              inner = `\\mathbfit{${e.key}}`;
               if (isSans) inner = `\\boldsymbol{\\mathsf{${e.key}}}`;
               if (isMono) inner = `\\boldsymbol{\\mathtt{${e.key}}}`;
           } else if (isBold && (isSans || isMono)) {
@@ -4513,12 +4513,14 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
       style={(!isMaximized && !isMinimized) ? { transform: `translate(${position.x}px, ${position.y}px)` } : { transform: 'none' }}
       onMouseDown={(e) => e.stopPropagation()}
     >
-      <div
-        className="cme-popup-header"
-        onMouseDown={handleDragStart}
-        style={{ cursor: isDragging ? 'grabbing' : (isMaximized ? 'default' : 'grab') }}
-      >
-        <span>{isEditing ? (mode === 'math' ? 'Edit Math Formula' : 'Edit Chemistry Formula') : (mode === 'math' ? 'Math Editor' : 'Chemistry Editor')}</span>
+      <div className="cme-popup-topbar">
+        <div
+          className="cme-popup-header"
+          onMouseDown={handleDragStart}
+          style={{ cursor: isDragging ? 'grabbing' : (isMaximized ? 'default' : 'grab') }}
+        >
+          <span>{isEditing ? (mode === 'math' ? 'Edit Math Formula' : 'Edit Chemistry Formula') : (mode === 'math' ? 'Math Editor' : 'Chemistry Editor')}</span>
+        </div>
         <div className="cme-popup-controls">
           <button type="button" className="cme-popup-btn" onClick={toggleMinimize} title="Minimize">—</button>
           <button type="button" className="cme-popup-btn" onClick={toggleMaximize} title="Maximize">⤢</button>
@@ -4783,8 +4785,16 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                             const sel = mf.selection;
                             if (sel && !sel.isCollapsed) {
                               let selText = mf.getValue(sel);
-                              selText = selText.replace(/\\mathrm{([^}]*)}/g, '$1');
-                              mf.executeCommand(['insert', `\\mathbf{${selText}}`]);
+                              selText = selText.replace(/\\mathrm{([^}]*)}/g, '$1').replace(/\\mathbf{([^}]*)}/g, '$1').replace(/\\mathit{([^}]*)}/g, '$1').replace(/\\mathbfit{([^}]*)}/g, '$1');
+                              if (newBold && activeStyles.italic) {
+                                mf.executeCommand(['insert', `\\mathbfit{${selText}}`]);
+                              } else if (newBold) {
+                                mf.executeCommand(['insert', `\\mathbf{${selText}}`]);
+                              } else if (activeStyles.italic) {
+                                mf.executeCommand(['insert', `\\mathit{${selText}}`]);
+                              } else {
+                                mf.executeCommand(['insert', `\\mathrm{${selText}}`]);
+                              }
                             }
                             setActiveStyles(prev => ({ ...prev, bold: newBold }));
                           }
@@ -4796,8 +4806,16 @@ function MathChemPopup({ mode, onInsert, onClose, initialLatex, isEditing }) {
                             const sel = mf.selection;
                             if (sel && !sel.isCollapsed) {
                               let selText = mf.getValue(sel);
-                              selText = selText.replace(/\\mathrm{([^}]*)}/g, '$1');
-                              mf.executeCommand(['insert', `\\mathit{${selText}}`]);
+                              selText = selText.replace(/\\mathrm{([^}]*)}/g, '$1').replace(/\\mathbf{([^}]*)}/g, '$1').replace(/\\mathit{([^}]*)}/g, '$1').replace(/\\mathbfit{([^}]*)}/g, '$1');
+                              if (activeStyles.bold && newItalic) {
+                                mf.executeCommand(['insert', `\\mathbfit{${selText}}`]);
+                              } else if (activeStyles.bold) {
+                                mf.executeCommand(['insert', `\\mathbf{${selText}}`]);
+                              } else if (newItalic) {
+                                mf.executeCommand(['insert', `\\mathit{${selText}}`]);
+                              } else {
+                                mf.executeCommand(['insert', `\\mathrm{${selText}}`]);
+                              }
                             }
                             setActiveStyles(prev => ({ ...prev, italic: newItalic }));
                           }
