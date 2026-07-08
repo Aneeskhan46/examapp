@@ -250,6 +250,88 @@ function injectMathFieldStyles(mathFieldEl) {
       padding-right: 0.2em;
       text-align: left;
     }
+    .cme-lshape-wrapper {
+      display: inline-grid !important;
+      grid-template-columns: auto auto;
+      grid-template-rows: auto auto;
+      align-items: baseline;
+      vertical-align: middle;
+    }
+    .cme-lshape-div1 {
+      display: block !important;
+      grid-column: 1;
+      grid-row: 1;
+      text-align: right;
+      padding-top: 0.1em;
+      padding-bottom: 0.1em;
+      padding-right: 0.1em;
+    }
+    .cme-lshape-val1 {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 1;
+      border-left: 1px solid currentColor;
+      border-bottom: 1px solid currentColor;
+      padding-left: 0.3em;
+      padding-right: 0.2em;
+      padding-top: 0.1em;
+      padding-bottom: 0.1em;
+      text-align: left;
+    }
+    .cme-lshape-div2 {
+      display: block !important;
+      grid-column: 1;
+      grid-row: 2;
+      text-align: right;
+      padding-top: 0.1em;
+      padding-right: 0.1em;
+    }
+    .cme-lshape-val2 {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 2;
+      padding-left: calc(0.3em + 1px);
+      padding-top: 0.1em;
+      text-align: left;
+    }
+    .cme-col-op-wrapper {
+      display: inline-grid !important;
+      grid-template-columns: auto auto;
+      grid-template-rows: auto auto auto;
+      align-items: end;
+      vertical-align: middle;
+    }
+    .cme-col-op-val1 {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 1;
+      text-align: right;
+      padding-bottom: 0.1em;
+    }
+    .cme-col-op-op {
+      display: block !important;
+      grid-column: 1;
+      grid-row: 2;
+      text-align: right;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 0.1em;
+      padding-right: 0.3em;
+    }
+    .cme-col-op-val2 {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 2;
+      text-align: right;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 0.1em;
+    }
+    .cme-col-op-result {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 3;
+      text-align: right;
+      padding-top: 0.1em;
+    }
   `;
 }
 
