@@ -193,6 +193,63 @@ function injectMathFieldStyles(mathFieldEl) {
       padding: 0.1em 0.2em;
       margin-left: 0.1em;
     }
+    .cme-longdiv-wrapper {
+      display: inline-grid !important;
+      grid-template-columns: auto auto;
+      grid-template-rows: auto auto;
+      align-items: baseline;
+      vertical-align: -0.4em;
+    }
+    .cme-longdiv-quotient {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 1;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 0.1em;
+      padding-left: 0.2em;
+      text-align: center;
+    }
+    .cme-longdiv-divisor {
+      display: block !important;
+      grid-column: 1;
+      grid-row: 2;
+      text-align: right;
+      padding-right: 0.1em;
+      padding-top: 0.1em;
+    }
+    .cme-longdiv-dividend {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 2;
+      position: relative;
+      padding-left: 0.4em;
+      padding-top: 0.1em;
+      padding-right: 0.2em;
+      text-align: left;
+    }
+    .cme-longdiv-dividend::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0.4em;
+      height: 100%;
+      background: currentColor;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 10 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 0 C 10 20, 10 80, 0 100' stroke='black' stroke-width='1.5' fill='none' vector-effect='non-scaling-stroke' stroke-linecap='round' /%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg preserveAspectRatio='none' viewBox='0 0 10 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 0 C 10 20, 10 80, 0 100' stroke='black' stroke-width='1.5' fill='none' vector-effect='non-scaling-stroke' stroke-linecap='round' /%3E%3C/svg%3E");
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      pointer-events: none;
+    }
+    .cme-longdiv-remainder {
+      display: block !important;
+      grid-column: 2;
+      grid-row: 3;
+      padding-left: 0.4em;
+      padding-top: 0.1em;
+      padding-right: 0.2em;
+      text-align: left;
+    }
   `;
 }
 
