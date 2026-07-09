@@ -18,9 +18,14 @@ const generateCharacters = () => {
     cat.ranges.forEach(range => {
       for (let i = range[0]; i <= range[1]; i++) {
         if (i >= 0x007F && i <= 0x009F) continue;
+        
+        const charStr = String.fromCodePoint(i);
+        // Filter out unassigned, control, or format characters (which render as boxes)
+        if (/\p{C}/u.test(charStr)) continue;
+
         chars.push({
           code: i.toString(16).toUpperCase().padStart(4, '0'),
-          char: String.fromCodePoint(i),
+          char: charStr,
           category: cat.id
         });
       }
